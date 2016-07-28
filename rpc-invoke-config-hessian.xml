@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+  <context:component-scan base-package="newlandframework.netty.rpc.core"/>
+  <context:property-placeholder location="classpath:newlandframework/netty/rpc/config/rpc-server-hessian.properties"/>
+  <bean id="rpcbean" class="newlandframework.netty.rpc.model.MessageKeyVal">
+    <property name="messageKeyVal">
+      <map>
+        <entry key="newlandframework.netty.rpc.servicebean.Calculate">
+          <ref bean="calc"/>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="calc" class="newlandframework.netty.rpc.servicebean.CalculateImpl"/>
+  <bean id="rpcServer" class="newlandframework.netty.rpc.core.MessageRecvExecutor">
+    <constructor-arg name="serverAddress" value="${rpc.server.addr}"/>
+    <constructor-arg name="serializeProtocol" value="HESSIANSERIALIZE"/>
+  </bean>
+</beans>

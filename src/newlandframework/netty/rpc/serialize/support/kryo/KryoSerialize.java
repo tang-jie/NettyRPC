@@ -32,6 +32,7 @@ public class KryoSerialize implements RpcSerialize {
         Output out = new Output(output);
         kryo.writeClassAndObject(out, object);
         out.close();
+        output.close();
         pool.release(kryo);
     }
 
@@ -40,6 +41,7 @@ public class KryoSerialize implements RpcSerialize {
         Input in = new Input(input);
         Object result = kryo.readClassAndObject(in);
         in.close();
+        input.close();
         pool.release(kryo);
         return result;
     }

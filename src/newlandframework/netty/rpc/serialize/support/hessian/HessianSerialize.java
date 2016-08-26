@@ -40,6 +40,7 @@ public class HessianSerialize implements RpcSerialize {
             result = hi.readObject();
             hi.completeMessage();
             hi.close();
+            input.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

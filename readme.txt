@@ -13,5 +13,5 @@
 ##   ### ##          ##       ##       ##    ##    ##  ##        ##    ## 
 ##    ## ########    ##       ##       ##    ##     ## ##         ######  
 
-Author:�ƽࣨtangjie��http://www.cnblogs.com/jietang/
+Author:唐洁（tangjie）http://www.cnblogs.com/jietang/
 

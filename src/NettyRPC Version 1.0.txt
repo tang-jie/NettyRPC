@@ -1,0 +1,13 @@
+NettyRPC 1.0 Build 2016/6/25 by tangjie
+
+
+
+## NettyRPC 1.0 English Introduction:
+**NettyRPC is based on Netty to build the RPC system, the message network transmission support the current mainstream codec.**
+* NettyRPC based on Java language, network communications rely on Netty.
+* RPC server using the thread pool on the RPC call asynchronous callback processing.
+* service definition, implementation, through the Spring container(IOC) loading, unloading.
+* message network transmission in addition to JDK native object serialization mode, but also to support the current mainstream of the codec: kryo, hessian.
+* Netty network model uses the master-slave Reactor thread model, to improve the performance of RPC server parallel throughput.
+* multi thread model using guava thread framework.
+

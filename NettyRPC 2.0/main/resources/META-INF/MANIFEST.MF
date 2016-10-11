@@ -1,4 +1,21 @@
 Manifest-Version: 1.0
-Class-Path: ../spring-context-4.1.1.RELEASE.jar
+Archiver-Version: Plexus Archiver
+Built-By: 洁
+Class-Path: lib/slf4j-api-1.7.12.jar lib/log4j-api-2.4.1.jar lib/log4j
+ -core-2.4.1.jar lib/log4j-slf4j-impl-2.4.1.jar lib/log4j-jcl-2.4.1.ja
+ r lib/commons-logging-1.2.jar lib/log4j-jul-2.4.1.jar lib/log4j-web-2
+ .4.1.jar lib/commons-collections-3.1.jar lib/commons-lang3-3.4.jar li
+ b/netty-all-4.0.36.Final.jar lib/kryo-3.0.3.jar lib/reflectasm-1.10.1
+ .jar lib/asm-5.0.3.jar lib/minlog-1.3.0.jar lib/guava-19.0.jar lib/sp
+ ring-context-4.1.1.RELEASE.jar lib/spring-expression-4.1.1.RELEASE.ja
+ r lib/spring-core-4.1.1.RELEASE.jar lib/spring-beans-4.1.1.RELEASE.ja
+ r lib/spring-aop-4.1.1.RELEASE.jar lib/aopalliance-1.0.jar lib/spring
+ -context-support-4.1.1.RELEASE.jar lib/spring-aspects-4.1.1.RELEASE.j
+ ar lib/aspectjweaver-1.8.2.jar lib/commons-pool2-2.4.2.jar lib/hessia
+ n-4.0.38.jar lib/protostuff-core-1.0.8.jar lib/protostuff-api-1.0.8.j
+ ar lib/protostuff-runtime-1.0.8.jar lib/protostuff-collectionschema-1
+ .0.8.jar lib/objenesis-2.1.jar
+Created-By: Apache Maven 3.3.3
+Build-Jdk: 1.8.0_45
 Main-Class: com.newlandframework.rpc.boot.RpcServerStarter
 

@@ -15,10 +15,10 @@
  */
 package com.newlandframework.rpc.spring;
 
+import com.newlandframework.rpc.serialize.RpcSerializeProtocol;
 import com.newlandframework.rpc.netty.MessageRecvExecutor;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import com.newlandframework.rpc.serialize.RpcSerializeProtocol;
 
 /**
  * @author tangjie<https://github.com/tang-jie>

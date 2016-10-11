@@ -1,10 +1,9 @@
 # NettyRPC
-## NettyRPC English Introduction:
 high performance java rpc server base on netty framework,using kryo,hessian,protostuff support rpc message serialization.
 ----------
-NettyRPC 1.0 Build 2016/6/25 by tangjie
+##NettyRPC 1.0 Build 2016/6/25 by tangjie
 
-## NettyRPC 1.0 中文简介：
+### NettyRPC 1.0 中文简介：
 **NettyRPC是基于Netty构建的RPC系统，消息网络传输支持目前主流的编码解码器**
 * NettyRPC基于Java语言进行编写，网络通讯依赖Netty。
 * RPC服务端采用线程池对RPC调用进行异步回调处理。
@@ -13,7 +12,7 @@ NettyRPC 1.0 Build 2016/6/25 by tangjie
 * Netty网络模型采用主从Reactor线程模型，提升RPC服务器并行吞吐性能。
 * 多线程模型采用guava线程库进行封装。
 
-## NettyRPC 1.0 English Introduction:
+### NettyRPC 1.0 English Introduction:
 **NettyRPC is based on Netty to build the RPC system, the message network transmission support the current mainstream codec.**
 * NettyRPC based on Java language, network communications rely on Netty.
 * RPC server using the thread pool on the RPC call asynchronous callback processing.
@@ -23,15 +22,15 @@ NettyRPC 1.0 Build 2016/6/25 by tangjie
 * multi thread model using guava thread framework.
 
 
-NettyRPC 2.0 Build 2016/10/7 by tangjie
+##NettyRPC 2.0 Build 2016/10/7 by tangjie
 
-## NettyRPC 2.0 中文简介：
+### NettyRPC 2.0 中文简介：
 **NettyRPC 2.0是基于NettyRPC 1.0 在Maven下构建的RPC系统，在原有1.0版本的基础上对代码进行重构升级，主要改进点如下：**
 * RPC服务启动、注册、卸载支持通过Spring中的nettyrpc标签进行统一管理。
 * 在原来编码解码器：JDK原生的对象序列化方式、kryo、hessian，新增了：protostuff。
 * 优化了NettyRPC服务端的线程池模型，支持LinkedBlockingQueue、ArrayBlockingQueue、SynchronousQueue，并扩展了多个线程池任务处理策略。
 
-## NettyRPC 2.0 English Introduction:
+### NettyRPC 2.0 English Introduction:
 **NettyRPC 2.0 is based on NettyRPC 1.0 under the Maven to build the RPC system, based on the original 1.0 version of the code to refactoring, the main improvements are as follows:**
 * RPC service startup, registration, uninstall support through the nettyrpc Spring tags for unified management.
 * in the original codec: JDK native object serialization mode, kryo, hessian, added: protostuff.

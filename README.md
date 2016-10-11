@@ -1,5 +1,6 @@
-# NettyRPC
+# NettyRPC Project
 high performance java rpc server base on netty framework,using kryo,hessian,protostuff support rpc message serialization.
+
 ----------
 ##NettyRPC 1.0 Build 2016/6/25 by tangjie
 
@@ -21,7 +22,7 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * Netty network model uses the master-slave Reactor thread model, to improve the performance of RPC server parallel throughput.
 * multi thread model using guava thread framework.
 
-
+----------
 ##NettyRPC 2.0 Build 2016/10/7 by tangjie
 
 ### NettyRPC 2.0 中文简介：

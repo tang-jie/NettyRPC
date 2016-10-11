@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: ../spring-context-4.1.1.RELEASE.jar
+Main-Class: com.newlandframework.rpc.boot.RpcServerStarter
+

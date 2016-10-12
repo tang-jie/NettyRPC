@@ -15,25 +15,17 @@
  */
 package com.newlandframework.rpc.netty;
 
-import com.newlandframework.rpc.serialize.MessageCodecUtil;
+import com.newlandframework.rpc.netty.handler.NettyRpcSendHandler;
+import com.newlandframework.rpc.netty.handler.JdkNativeSendHandler;
+import com.newlandframework.rpc.netty.handler.KryoSendHandler;
+import com.newlandframework.rpc.netty.handler.HessianSendHandler;
+import com.newlandframework.rpc.netty.handler.ProtostuffSendHandler;
 import com.newlandframework.rpc.serialize.RpcSerializeFrame;
 import com.newlandframework.rpc.serialize.RpcSerializeProtocol;
-import com.newlandframework.rpc.serialize.hessian.HessianCodecUtil;
-import com.newlandframework.rpc.serialize.hessian.HessianDecoder;
-import com.newlandframework.rpc.serialize.hessian.HessianEncoder;
-import com.newlandframework.rpc.serialize.kryo.KryoCodecUtil;
-import com.newlandframework.rpc.serialize.kryo.KryoDecoder;
-import com.newlandframework.rpc.serialize.kryo.KryoEncoder;
-import com.newlandframework.rpc.serialize.kryo.KryoPoolFactory;
-import com.newlandframework.rpc.serialize.protostuff.ProtostuffCodecUtil;
-import com.newlandframework.rpc.serialize.protostuff.ProtostuffDecoder;
-import com.newlandframework.rpc.serialize.protostuff.ProtostuffEncoder;
+import com.google.common.collect.ClassToInstanceMap;
+import com.google.common.collect.MutableClassToInstanceMap;
 import io.netty.channel.ChannelPipeline;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
+
 
 /**
  * @author tangjie<https://github.com/tang-jie>
@@ -43,37 +35,31 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
  * @since 2016/10/7
  */
 public class RpcSendSerializeFrame implements RpcSerializeFrame {
+    private static ClassToInstanceMap<NettyRpcSendHandler> handler = MutableClassToInstanceMap.create();
+
+    static {
+        handler.putInstance(JdkNativeSendHandler.class, new JdkNativeSendHandler());
+        handler.putInstance(KryoSendHandler.class, new KryoSendHandler());
+        handler.putInstance(HessianSendHandler.class, new HessianSendHandler());
+        handler.putInstance(ProtostuffSendHandler.class, new ProtostuffSendHandler());
+    }
 
     public void select(RpcSerializeProtocol protocol, ChannelPipeline pipeline) {
         switch (protocol) {
             case JDKSERIALIZE: {
-                pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, MessageCodecUtil.MESSAGE_LENGTH, 0, MessageCodecUtil.MESSAGE_LENGTH));
-                pipeline.addLast(new LengthFieldPrepender(MessageCodecUtil.MESSAGE_LENGTH));
-                pipeline.addLast(new ObjectEncoder());
-                pipeline.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
-                pipeline.addLast(new MessageSendHandler());
+                handler.getInstance(JdkNativeSendHandler.class).handle(pipeline);
                 break;
             }
             case KRYOSERIALIZE: {
-                KryoCodecUtil util = new KryoCodecUtil(KryoPoolFactory.getKryoPoolInstance());
-                pipeline.addLast(new KryoEncoder(util));
-                pipeline.addLast(new KryoDecoder(util));
-                pipeline.addLast(new MessageSendHandler());
+                handler.getInstance(KryoSendHandler.class).handle(pipeline);
                 break;
             }
             case HESSIANSERIALIZE: {
-                HessianCodecUtil util = new HessianCodecUtil();
-                pipeline.addLast(new HessianEncoder(util));
-                pipeline.addLast(new HessianDecoder(util));
-                pipeline.addLast(new MessageSendHandler());
+                handler.getInstance(HessianSendHandler.class).handle(pipeline);
                 break;
             }
             case PROTOSTUFFSERIALIZE: {
-                ProtostuffCodecUtil util = new ProtostuffCodecUtil();
-                util.setRpcDirect(false);
-                pipeline.addLast(new ProtostuffEncoder(util));
-                pipeline.addLast(new ProtostuffDecoder(util));
-                pipeline.addLast(new MessageSendHandler());
+                handler.getInstance(ProtostuffSendHandler.class).handle(pipeline);
                 break;
             }
         }

@@ -15,10 +15,13 @@
  */
 package com.newlandframework.rpc.spring;
 
+import com.newlandframework.rpc.core.RpcSystemConfig;
+import com.newlandframework.rpc.jmx.ThreadPoolMonitorProvider;
 import com.newlandframework.rpc.serialize.RpcSerializeProtocol;
 import com.newlandframework.rpc.netty.MessageRecvExecutor;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
@@ -30,6 +33,7 @@ import org.springframework.beans.factory.InitializingBean;
 public class NettyRpcRegistery implements InitializingBean, DisposableBean {
     private String ipAddr;
     private String protocol;
+    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
     public void destroy() throws Exception {
         MessageRecvExecutor.getInstance().stop();
@@ -39,6 +43,12 @@ public class NettyRpcRegistery implements InitializingBean, DisposableBean {
         MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
         ref.setServerAddress(ipAddr);
         ref.setSerializeProtocol(Enum.valueOf(RpcSerializeProtocol.class, protocol));
+        
+        if (RpcSystemConfig.isMonitorServerSupport()) {
+            context.register(ThreadPoolMonitorProvider.class);
+            context.refresh();
+        }
+
         ref.start();
     }
 

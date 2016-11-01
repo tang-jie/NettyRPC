@@ -16,6 +16,8 @@
 package com.newlandframework.rpc.parallel;
 
 import com.newlandframework.rpc.core.RpcSystemConfig;
+import com.newlandframework.rpc.jmx.ThreadPoolMonitorProvider;
+import com.newlandframework.rpc.jmx.ThreadPoolStatus;
 import com.newlandframework.rpc.parallel.policy.AbortPolicy;
 import com.newlandframework.rpc.parallel.policy.BlockingPolicy;
 import com.newlandframework.rpc.parallel.policy.CallerRunsPolicy;
@@ -23,6 +25,13 @@ import com.newlandframework.rpc.parallel.policy.DiscardedPolicy;
 import com.newlandframework.rpc.parallel.policy.RejectedPolicy;
 import com.newlandframework.rpc.parallel.policy.RejectedPolicyType;
 
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MalformedObjectNameException;
+import javax.management.ReflectionException;
+import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -40,6 +49,9 @@ import java.util.concurrent.RejectedExecutionHandler;
  * @since 2016/10/7
  */
 public class RpcThreadPool {
+    private static final Timer timer = new Timer("ThreadPoolMonitor", true);
+    private static long monitorDelay = 100;
+    private static long monitorPeriod = 300;
 
     private static RejectedExecutionHandler createPolicy() {
         RejectedPolicyType rejectedPolicyType = RejectedPolicyType.fromString(System.getProperty(RpcSystemConfig.SystemPropertyThreadPoolRejectedPolicyAttr, "AbortPolicy"));
@@ -77,9 +89,42 @@ public class RpcThreadPool {
 
     public static Executor getExecutor(int threads, int queues) {
         String name = "RpcThreadPool";
-        return new ThreadPoolExecutor(threads, threads, 0, TimeUnit.MILLISECONDS,
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads, 0, TimeUnit.MILLISECONDS,
                 createBlockingQueue(queues),
                 new NamedThreadFactory(name, true), createPolicy());
+        return executor;
+    }
+
+    public static Executor getExecutorWithJmx(int threads, int queues) {
+        final ThreadPoolExecutor executor = (ThreadPoolExecutor) getExecutor(threads, queues);
+        timer.scheduleAtFixedRate(new TimerTask() {
+
+            public void run() {
+                ThreadPoolStatus status = new ThreadPoolStatus();
+                status.setPoolSize(executor.getPoolSize());
+                status.setActiveCount(executor.getActiveCount());
+                status.setCorePoolSize(executor.getCorePoolSize());
+                status.setMaximumPoolSize(executor.getMaximumPoolSize());
+                status.setLargestPoolSize(executor.getLargestPoolSize());
+                status.setTaskCount(executor.getTaskCount());
+                status.setCompletedTaskCount(executor.getCompletedTaskCount());
+
+                try {
+                    ThreadPoolMonitorProvider.monitor(status);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (MalformedObjectNameException e) {
+                    e.printStackTrace();
+                } catch (ReflectionException e) {
+                    e.printStackTrace();
+                } catch (MBeanException e) {
+                    e.printStackTrace();
+                } catch (InstanceNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, monitorDelay, monitorDelay);
+        return executor;
     }
 }
 

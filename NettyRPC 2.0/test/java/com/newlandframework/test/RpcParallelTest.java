@@ -87,14 +87,14 @@ public class RpcParallelTest {
     public static void main(String[] args) throws Exception {
         //并行度1000
         int parallel = 1000;
-        ClassPathXmlApplicationContext contextJdkNative = new ClassPathXmlApplicationContext("classpath:rpc-invoke-config-client.xml");
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:rpc-invoke-config-client.xml");
 
         for (int i = 0; i < 1; i++) {
-            addTask((AddCalculate) contextJdkNative.getBean("addCalc"), parallel);
-            multiTask((MultiCalculate) contextJdkNative.getBean("multiCalc"), parallel);
+            addTask((AddCalculate) context.getBean("addCalc"), parallel);
+            multiTask((MultiCalculate) context.getBean("multiCalc"), parallel);
             System.out.printf("[author tangjie] Netty RPC Server 消息协议序列化第[%d]轮并发验证结束!\n\n", i);
         }
 
-        contextJdkNative.destroy();
+        context.destroy();
     }
 }

@@ -30,12 +30,14 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * RPC服务启动、注册、卸载支持通过Spring中的nettyrpc标签进行统一管理。
 * 在原来编码解码器：JDK原生的对象序列化方式、kryo、hessian，新增了：protostuff。
 * 优化了NettyRPC服务端的线程池模型，支持LinkedBlockingQueue、ArrayBlockingQueue、SynchronousQueue，并扩展了多个线程池任务处理策略。
+* NettyRPC服务端加入JMX监控支持。
 
 ### NettyRPC 2.0 English Introduction:
 **NettyRPC 2.0 is based on NettyRPC 1.0 under the Maven to build the RPC system, based on the original 1.0 version of the code to refactoring, the main improvements are as follows:**
 * RPC service startup, registration, uninstall support through the nettyrpc Spring tags for unified management.
 * in the original codec: JDK native object serialization mode, kryo, hessian, added: protostuff.
 * optimize the NettyRPC server's thread pool model, support LinkedBlockingQueue, ArrayBlockingQueue, SynchronousQueue, and expand the various thread pool task processing strategy.
+* NettyRPC JMX monitoring support.
 
 ----------
 ## NettyRPC相关博客文章
@@ -52,6 +54,12 @@ http://www.cnblogs.com/jietang/p/5615681.html
 **Netty实现高性能RPC服务器优化篇之消息序列化**
 
 http://www.cnblogs.com/jietang/p/5675171.html
+
+**Based on Netty to develop RPC server design experience**
+
+**基于Netty打造RPC服务器设计经验谈**
+
+http://www.cnblogs.com/jietang/p/5983038.html
 
 ----------
 

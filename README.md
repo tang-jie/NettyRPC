@@ -41,7 +41,7 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 
 ----------
 ## NettyRPC相关博客文章
-if you want to know more details,okey!you can see my blog two articles:
+if you want to know more details,okey!you can see my blog:
 
 **Talk about how to use Netty nio frameworks development high performance RPC server**
 

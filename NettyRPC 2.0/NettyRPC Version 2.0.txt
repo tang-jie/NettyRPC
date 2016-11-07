@@ -5,6 +5,7 @@ NettyRPC 2.0 Build 2016/10/7 by tangjie
 * RPC服务启动、注册、卸载支持通过Spring中的nettyrpc标签进行统一管理。
 * 在原来编码解码器：JDK原生的对象序列化方式、kryo、hessian，新增了：protostuff。
 * 优化了NettyRPC服务端的线程池模型，支持LinkedBlockingQueue、ArrayBlockingQueue、SynchronousQueue，并扩展了多个线程池任务处理策略。
+* NettyRPC服务端加入JMX监控支持。
 
 
 
@@ -13,4 +14,5 @@ NettyRPC 2.0 Build 2016/10/7 by tangjie
 * RPC service startup, registration, uninstall support through the nettyrpc Spring tags for unified management.
 * in the original codec: JDK native object serialization mode, kryo, hessian, added: protostuff.
 * optimize the NettyRPC server's thread pool model, support LinkedBlockingQueue, ArrayBlockingQueue, SynchronousQueue, and expand the various thread pool task processing strategy.
+* NettyRPC JMX monitoring support.
 

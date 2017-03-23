@@ -40,6 +40,12 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * NettyRPC JMX monitoring support.
 
 ----------
+##NettyRPC 2.1 Build 2017/3/23 by tangjie
+
+**在NettyRPC 2.0的基础上新增NettyRPC异步回调功能模块：
+* 利用cglib生成的异步代理Mock对象，结合线程池技术对一些极端耗时场景的RPC调用，进一步提高并行吞吐量，并且调用的客户端不至于发生阻塞。
+
+----------
 ## NettyRPC相关博客文章
 if you want to know more details,okey!you can see my blog:
 

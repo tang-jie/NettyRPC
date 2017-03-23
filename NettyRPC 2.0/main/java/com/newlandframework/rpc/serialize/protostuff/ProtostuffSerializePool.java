@@ -28,7 +28,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 public class ProtostuffSerializePool {
 
     private GenericObjectPool<ProtostuffSerialize> ProtostuffPool;
-    volatile private static ProtostuffSerializePool poolFactory = null;
+    private static volatile ProtostuffSerializePool poolFactory = null;
 
     private ProtostuffSerializePool() {
         ProtostuffPool = new GenericObjectPool<ProtostuffSerialize>(new ProtostuffSerializeFactory());

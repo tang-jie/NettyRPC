@@ -63,16 +63,14 @@ public class MessageRecvExecutor implements ApplicationContextAware {
 
     private String serverAddress;
     private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDKSERIALIZE;
-    private final static String DELIMITER = ":";
-    int parallel = RpcSystemConfig.PARALLEL * 2;
-    private static int threadNums = 16;
-    private static int queueNums = -1;
-
+    private static final String DELIMITER = RpcSystemConfig.DELIMITER;
+    private int parallel = RpcSystemConfig.PARALLEL * 2;
+    private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_THREAD_NUMS;
+    private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_QUEUE_NUMS;
+    private static volatile ListeningExecutorService threadPoolExecutor;
     private Map<String, Object> handlerMap = new ConcurrentHashMap<String, Object>();
 
-    volatile private static ListeningExecutorService threadPoolExecutor;
     ThreadFactory threadRpcFactory = new NamedThreadFactory("NettyRPC ThreadFactory");
-
     EventLoopGroup boss = new NioEventLoopGroup();
     EventLoopGroup worker = new NioEventLoopGroup(parallel, threadRpcFactory, SelectorProvider.provider());
 

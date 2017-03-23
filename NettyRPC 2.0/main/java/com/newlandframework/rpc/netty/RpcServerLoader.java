@@ -45,12 +45,14 @@ import java.util.logging.Logger;
  */
 public class RpcServerLoader {
 
-    volatile private static RpcServerLoader rpcServerLoader;
-    private final static String DELIMITER = ":";
+    private static volatile RpcServerLoader rpcServerLoader;
+    private static final String DELIMITER = RpcSystemConfig.DELIMITER;
     private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDKSERIALIZE;
-    private final static int parallel = RpcSystemConfig.PARALLEL * 2;
+    private static final int parallel = RpcSystemConfig.PARALLEL * 2;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(parallel);
-    private static ListeningExecutorService threadPoolExecutor = MoreExecutors.listeningDecorator((ThreadPoolExecutor) RpcThreadPool.getExecutor(16, -1));
+    private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_THREAD_NUMS;
+    private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_QUEUE_NUMS;
+    private static ListeningExecutorService threadPoolExecutor = MoreExecutors.listeningDecorator((ThreadPoolExecutor) RpcThreadPool.getExecutor(threadNums, queueNums));
     private MessageSendHandler messageSendHandler = null;
     private Lock lock = new ReentrantLock();
     private Condition connectStatus = lock.newCondition();

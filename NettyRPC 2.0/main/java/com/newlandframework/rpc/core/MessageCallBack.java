@@ -44,7 +44,7 @@ public class MessageCallBack {
     public Object start() throws InterruptedException {
         try {
             lock.lock();
-            finish.await(10 * 1000, TimeUnit.MILLISECONDS);
+            finish.await(RpcSystemConfig.SYSTEM_PROPERTY_MESSAGE_CALLBACK_TIMEOUT, TimeUnit.MILLISECONDS);
             if (this.response != null) {
                 return this.response.getResult();
             } else {

@@ -38,8 +38,7 @@ import com.newlandframework.rpc.model.MessageResponse;
 public class MessageSendHandler extends ChannelInboundHandlerAdapter {
 
     private ConcurrentHashMap<String, MessageCallBack> mapCallBack = new ConcurrentHashMap<String, MessageCallBack>();
-
-    volatile private Channel channel;
+    private volatile Channel channel;
     private SocketAddress remoteAddr;
 
     public Channel getChannel() {

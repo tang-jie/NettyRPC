@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Newland Group Holding Limited
+ * Copyright (C) 2017 Newland Group Holding Limited
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.newlandframework.rpc.serialize;
-
-import io.netty.channel.ChannelPipeline;
+package com.newlandframework.rpc.async;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:RpcSerializeFrame.java
- * @description:RpcSerializeFrame功能模块
+ * @filename:CallStatus.java
+ * @description:CallStatus功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2016/10/7
+ * @since 2017/3/22
  */
-public interface RpcSerializeFrame {
-    void select(RpcSerializeProtocol protocol, ChannelPipeline pipeline);
+public enum CallStatus {
+    RUN,
+    TIMEOUT,
+    DONE;
+
+    public boolean isRun() {
+        return this == RUN;
+    }
+
+    public boolean isTimeout() {
+        return this == TIMEOUT;
+    }
+
+    public boolean isDone() {
+        return this == DONE;
+    }
 }
 

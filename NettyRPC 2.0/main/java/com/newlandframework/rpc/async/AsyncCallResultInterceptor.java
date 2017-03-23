@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Newland Group Holding Limited
+ * Copyright (C) 2017 Newland Group Holding Limited
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.newlandframework.rpc.serialize;
+package com.newlandframework.rpc.async;
 
-import io.netty.channel.ChannelPipeline;
+import net.sf.cglib.proxy.LazyLoader;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:RpcSerializeFrame.java
- * @description:RpcSerializeFrame功能模块
+ * @filename:AsyncCallResultInterceptor.java
+ * @description:AsyncCallResultInterceptor功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2016/10/7
+ * @since 2017/3/22
  */
-public interface RpcSerializeFrame {
-    void select(RpcSerializeProtocol protocol, ChannelPipeline pipeline);
+public class AsyncCallResultInterceptor implements LazyLoader {
+
+    private AsyncCallResult result;
+
+    public AsyncCallResultInterceptor(AsyncCallResult result) {
+        this.result = result;
+    }
+
+    public Object loadObject() throws Exception {
+        return result.loadFuture();
+    }
+
 }
 

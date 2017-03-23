@@ -12,8 +12,11 @@
                       ref="calcMultiService"></nettyrpc:service>
     <nettyrpc:service id="demoPersonManage" interfaceName="com.newlandframework.rpc.services.PersonManage"
                       ref="personManageService"></nettyrpc:service>
+    <nettyrpc:service id="demoCostTime" interfaceName="com.newlandframework.rpc.services.CostTimeCalculate"
+                      ref="costTimeCalculateService"></nettyrpc:service>
     <nettyrpc:registry id="rpcRegistry" ipAddr="${rpc.server.addr}" protocol="PROTOSTUFFSERIALIZE"></nettyrpc:registry>
     <bean id="calcAddService" class="com.newlandframework.rpc.services.impl.AddCalculateImpl"></bean>
     <bean id="calcMultiService" class="com.newlandframework.rpc.services.impl.MultiCalculateImpl"></bean>
     <bean id="personManageService" class="com.newlandframework.rpc.services.impl.PersonManageImpl"></bean>
+    <bean id="costTimeCalculateService" class="com.newlandframework.rpc.services.impl.CostTimeCalculateImpl"></bean>
 </beans>

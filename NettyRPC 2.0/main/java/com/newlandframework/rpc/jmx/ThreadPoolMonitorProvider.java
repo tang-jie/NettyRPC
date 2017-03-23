@@ -47,14 +47,14 @@ import java.io.IOException;
 @EnableMBeanExport
 @ComponentScan("com.newlandframework.rpc.jmx")
 public class ThreadPoolMonitorProvider {
-    public final static String DELIMITER = ":";
-    public final static String jmxPoolSizeMethod = "setPoolSize";
-    public final static String jmxActiveCountMethod = "setActiveCount";
-    public final static String jmxCorePoolSizeMethod = "setCorePoolSize";
-    public final static String jmxMaximumPoolSizeMethod = "setMaximumPoolSize";
-    public final static String jmxLargestPoolSizeMethod = "setLargestPoolSize";
-    public final static String jmxTaskCountMethod = "setTaskCount";
-    public final static String jmxCompletedTaskCountMethod = "setCompletedTaskCount";
+    public static final String DELIMITER = ":";
+    public static final String JMX_POOL_SIZE_METHOD = "setPoolSize";
+    public static final String JMX_ACTIVE_COUNT_METHOD = "setActiveCount";
+    public static final String JMX_CORE_POOL_SIZE_METHOD = "setCorePoolSize";
+    public static final String JMX_MAXIMUM_POOL_SIZE_METHOD = "setMaximumPoolSize";
+    public static final String JMX_LARGEST_POOL_SIZE_METHOD = "setLargestPoolSize";
+    public static final String JMX_TASK_COUNT_METHOD = "setTaskCount";
+    public static final String JMX_COMPLETED_TASK_COUNT_METHOD = "setCompletedTaskCount";
     public static String url;
 
     @Bean
@@ -92,13 +92,13 @@ public class ThreadPoolMonitorProvider {
         MBeanServerConnection connection = mBeanServerConnectionFactoryBean.getObject();
         ObjectName objectName = new ObjectName("com.newlandframework.rpc.jmx:name=threadPoolStatus,type=ThreadPoolStatus");
 
-        connection.invoke(objectName, jmxPoolSizeMethod, new Object[]{status.getPoolSize()}, new String[]{int.class.getName()});
-        connection.invoke(objectName, jmxActiveCountMethod, new Object[]{status.getActiveCount()}, new String[]{int.class.getName()});
-        connection.invoke(objectName, jmxCorePoolSizeMethod, new Object[]{status.getCorePoolSize()}, new String[]{int.class.getName()});
-        connection.invoke(objectName, jmxMaximumPoolSizeMethod, new Object[]{status.getMaximumPoolSize()}, new String[]{int.class.getName()});
-        connection.invoke(objectName, jmxLargestPoolSizeMethod, new Object[]{status.getLargestPoolSize()}, new String[]{int.class.getName()});
-        connection.invoke(objectName, jmxTaskCountMethod, new Object[]{status.getTaskCount()}, new String[]{long.class.getName()});
-        connection.invoke(objectName, jmxCompletedTaskCountMethod, new Object[]{status.getCompletedTaskCount()}, new String[]{long.class.getName()});
+        connection.invoke(objectName, JMX_POOL_SIZE_METHOD, new Object[]{status.getPoolSize()}, new String[]{int.class.getName()});
+        connection.invoke(objectName, JMX_ACTIVE_COUNT_METHOD, new Object[]{status.getActiveCount()}, new String[]{int.class.getName()});
+        connection.invoke(objectName, JMX_CORE_POOL_SIZE_METHOD, new Object[]{status.getCorePoolSize()}, new String[]{int.class.getName()});
+        connection.invoke(objectName, JMX_MAXIMUM_POOL_SIZE_METHOD, new Object[]{status.getMaximumPoolSize()}, new String[]{int.class.getName()});
+        connection.invoke(objectName, JMX_LARGEST_POOL_SIZE_METHOD, new Object[]{status.getLargestPoolSize()}, new String[]{int.class.getName()});
+        connection.invoke(objectName, JMX_TASK_COUNT_METHOD, new Object[]{status.getTaskCount()}, new String[]{long.class.getName()});
+        connection.invoke(objectName, JMX_COMPLETED_TASK_COUNT_METHOD, new Object[]{status.getCompletedTaskCount()}, new String[]{long.class.getName()});
     }
 }
 

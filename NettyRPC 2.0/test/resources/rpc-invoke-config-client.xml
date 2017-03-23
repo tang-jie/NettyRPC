@@ -12,4 +12,6 @@
                         protocol="PROTOSTUFFSERIALIZE" ipAddr="${rpc.server.addr}"/>
     <nettyrpc:reference id="personManage" interfaceName="com.newlandframework.rpc.services.PersonManage"
                         protocol="PROTOSTUFFSERIALIZE" ipAddr="${rpc.server.addr}"/>
+    <nettyrpc:reference id="costTime" interfaceName="com.newlandframework.rpc.services.CostTimeCalculate"
+                        protocol="PROTOSTUFFSERIALIZE" ipAddr="${rpc.server.addr}"/>
 </beans>

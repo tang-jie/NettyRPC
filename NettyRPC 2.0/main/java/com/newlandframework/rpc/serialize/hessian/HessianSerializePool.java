@@ -28,7 +28,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 public class HessianSerializePool {
 
     private GenericObjectPool<HessianSerialize> hessianPool;
-    volatile private static HessianSerializePool poolFactory = null;
+    private static volatile HessianSerializePool poolFactory = null;
 
     private HessianSerializePool() {
         hessianPool = new GenericObjectPool<HessianSerialize>(new HessianSerializeFactory());

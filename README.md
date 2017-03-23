@@ -2,7 +2,7 @@
 high performance java rpc server base on netty framework,using kryo,hessian,protostuff support rpc message serialization.
 
 ----------
-##NettyRPC 1.0 Build 2016/6/25 by tangjie
+## NettyRPC 1.0 Build 2016/6/25 by tangjie
 
 ### NettyRPC 1.0 中文简介：
 **NettyRPC是基于Netty构建的RPC系统，消息网络传输支持目前主流的编码解码器**
@@ -23,7 +23,7 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * multi thread model using guava thread framework.
 
 ----------
-##NettyRPC 2.0 Build 2016/10/7 by tangjie
+## NettyRPC 2.0 Build 2016/10/7 by tangjie
 
 ### NettyRPC 2.0 中文简介：
 **NettyRPC 2.0是基于NettyRPC 1.0 在Maven下构建的RPC系统，在原有1.0版本的基础上对代码进行重构升级，主要改进点如下：**
@@ -40,10 +40,10 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * NettyRPC JMX monitoring support.
 
 ----------
-##NettyRPC 2.1 Build 2017/3/23 by tangjie
+## NettyRPC 2.1 Build 2017/3/23 by tangjie
 
-**在NettyRPC 2.0的基础上新增NettyRPC异步回调功能模块：
-* 利用cglib生成的异步代理Mock对象，结合线程池技术对一些极端耗时场景的RPC调用，进一步提高并行吞吐量，并且调用的客户端不至于发生阻塞。
+**在NettyRPC 2.0的基础上新增NettyRPC异步回调功能模块：**
+* 利用cglib生成的异步代理Mock对象，结合线程池技术对一些极端耗时的RPC调用场景，进一步提高客户端的并行吞吐量。
 
 ----------
 ## NettyRPC相关博客文章

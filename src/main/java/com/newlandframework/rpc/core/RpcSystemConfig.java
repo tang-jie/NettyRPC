@@ -31,6 +31,7 @@ public class RpcSystemConfig {
     public static final int SYSTEM_PROPERTY_THREADPOOL_QUEUE_NUMS = Integer.getInteger("nettyrpc-default-queue-nums", -1);
     public static final int PARALLEL = Math.max(2, Runtime.getRuntime().availableProcessors());
     public static final String DELIMITER = ":";
+    public static final String RPC_COMPILER_SPI_ATTR = "com.newlandframework.rpc.compiler.AccessAdaptive";
 
     private static boolean monitorServerSupport = false;
 

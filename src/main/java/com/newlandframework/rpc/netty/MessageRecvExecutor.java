@@ -21,6 +21,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
+import com.newlandframework.rpc.compiler.AccessAdaptiveProvider;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -73,6 +74,11 @@ public class MessageRecvExecutor implements ApplicationContextAware {
     ThreadFactory threadRpcFactory = new NamedThreadFactory("NettyRPC ThreadFactory");
     EventLoopGroup boss = new NioEventLoopGroup();
     EventLoopGroup worker = new NioEventLoopGroup(parallel, threadRpcFactory, SelectorProvider.provider());
+
+    public MessageRecvExecutor() {
+        handlerMap.clear();
+        handlerMap.put(RpcSystemConfig.RPC_COMPILER_SPI_ATTR, new AccessAdaptiveProvider());
+    }
 
     public Map<String, Object> getHandlerMap() {
         return handlerMap;

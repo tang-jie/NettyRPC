@@ -67,10 +67,15 @@ public class NativeCompiler implements Closeable {
     private void compileClass(JavaFileObject sourceFile) throws IOException {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<>();
-        try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(collector, Locale.ROOT, null)) {
+        StandardJavaFileManager fileManager = null;
+
+        try {
+            fileManager = compiler.getStandardFileManager(collector, Locale.ROOT, null);
             fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(tempFolder));
             JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, collector, null, null, Arrays.asList(sourceFile));
             task.call();
+        } finally {
+            fileManager.close();
         }
     }
 

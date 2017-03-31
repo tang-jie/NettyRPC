@@ -77,31 +77,7 @@ public class MessageRecvExecutor implements ApplicationContextAware {
 
     public MessageRecvExecutor() {
         handlerMap.clear();
-        handlerMap.put(RpcSystemConfig.RPC_COMPILER_SPI_ATTR, new AccessAdaptiveProvider());
-    }
-
-    public Map<String, Object> getHandlerMap() {
-        return handlerMap;
-    }
-
-    public void setHandlerMap(Map<String, Object> handlerMap) {
-        this.handlerMap = handlerMap;
-    }
-
-    public String getServerAddress() {
-        return serverAddress;
-    }
-
-    public void setServerAddress(String serverAddress) {
-        this.serverAddress = serverAddress;
-    }
-
-    public RpcSerializeProtocol getSerializeProtocol() {
-        return serializeProtocol;
-    }
-
-    public void setSerializeProtocol(RpcSerializeProtocol serializeProtocol) {
-        this.serializeProtocol = serializeProtocol;
+        register();
     }
 
     private static class MessageRecvExecutorHolder {
@@ -183,5 +159,33 @@ public class MessageRecvExecutor implements ApplicationContextAware {
     public void stop() {
         worker.shutdownGracefully();
         boss.shutdownGracefully();
+    }
+
+    private void register() {
+        handlerMap.put(RpcSystemConfig.RPC_COMPILER_SPI_ATTR, new AccessAdaptiveProvider());
+    }
+
+    public Map<String, Object> getHandlerMap() {
+        return handlerMap;
+    }
+
+    public void setHandlerMap(Map<String, Object> handlerMap) {
+        this.handlerMap = handlerMap;
+    }
+
+    public String getServerAddress() {
+        return serverAddress;
+    }
+
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
+    public RpcSerializeProtocol getSerializeProtocol() {
+        return serializeProtocol;
+    }
+
+    public void setSerializeProtocol(RpcSerializeProtocol serializeProtocol) {
+        this.serializeProtocol = serializeProtocol;
     }
 }

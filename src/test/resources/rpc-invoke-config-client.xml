@@ -16,4 +16,6 @@
                         protocol="PROTOSTUFFSERIALIZE" ipAddr="${rpc.server.addr}"/>
     <nettyrpc:reference id="access" interfaceName="com.newlandframework.rpc.compiler.AccessAdaptive"
                         protocol="PROTOSTUFFSERIALIZE" ipAddr="${rpc.server.addr}"/>
+    <nettyrpc:reference id="ability" interfaceName="com.newlandframework.rpc.core.AbilityDetail"
+                        protocol="PROTOSTUFFSERIALIZE" ipAddr="${rpc.server.addr}"/>
 </beans>

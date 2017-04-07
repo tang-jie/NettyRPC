@@ -21,7 +21,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
-import com.newlandframework.rpc.compiler.AccessAdaptiveProvider;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -48,6 +47,8 @@ import com.newlandframework.rpc.model.MessageKeyVal;
 import com.newlandframework.rpc.model.MessageRequest;
 import com.newlandframework.rpc.model.MessageResponse;
 import com.newlandframework.rpc.serialize.RpcSerializeProtocol;
+import com.newlandframework.rpc.compiler.AccessAdaptiveProvider;
+import com.newlandframework.rpc.core.AbilityDetailProvider;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -163,6 +164,7 @@ public class MessageRecvExecutor implements ApplicationContextAware {
 
     private void register() {
         handlerMap.put(RpcSystemConfig.RPC_COMPILER_SPI_ATTR, new AccessAdaptiveProvider());
+        handlerMap.put(RpcSystemConfig.RPC_ABILITY_DETAIL_SPI_ATTR, new AbilityDetailProvider());
     }
 
     public Map<String, Object> getHandlerMap() {

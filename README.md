@@ -49,7 +49,8 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 ## NettyRPC 2.2 Build 2017/5/2 by tangjie
 
 **在2.1版本的基础上，提供NettyRPC服务端接口能力展现功能：**
-* 接口能力展现功能模块部署在服务端的18886端口，可以在浏览器中输入：http://ip地址:18886/NettyRPC.html 进行查看。比如在浏览器的地址栏中输入：http://10.1.1.76:18886/NettyRPC.html ，查询展现如下：
+* 接口能力展现功能模块部署在服务端的18886端口，可以在浏览器中输入：http://ip地址:18886/NettyRPC.html  进行查看。
+* 比如在浏览器的地址栏中输入：http://10.1.1.76:18886/NettyRPC.html  查询展现如下：
 ![nettyrpc-http](docs/echo-api-2.jpg "nettyrpc-http")
 
 ----------

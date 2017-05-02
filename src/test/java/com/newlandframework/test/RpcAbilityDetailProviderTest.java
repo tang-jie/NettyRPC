@@ -20,18 +20,18 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:RpcAbilityDetailProvider.java
- * @description:RpcAbilityDetailProvider功能模块
+ * @filename:RpcAbilityDetailProviderTest.java
+ * @description:RpcAbilityDetailProviderTest功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2017/4/7
+ * @since 2017/5/2
  */
-public class RpcAbilityDetailProvider {
+public class RpcAbilityDetailProviderTest {
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:rpc-invoke-config-client.xml");
 
         AbilityDetail provider = (AbilityDetail) context.getBean("ability");
 
-        StringBuilder ability = provider.listAbilityDetail();
+        StringBuilder ability = provider.listAbilityDetail(false);
 
         System.out.println(ability);
 

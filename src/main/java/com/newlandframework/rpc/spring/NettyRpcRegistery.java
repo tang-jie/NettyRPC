@@ -33,6 +33,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class NettyRpcRegistery implements InitializingBean, DisposableBean {
     private String ipAddr;
     private String protocol;
+    private String echoApiPort;
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
     public void destroy() throws Exception {
@@ -42,8 +43,9 @@ public class NettyRpcRegistery implements InitializingBean, DisposableBean {
     public void afterPropertiesSet() throws Exception {
         MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
         ref.setServerAddress(ipAddr);
+        ref.setEchoApiPort(Integer.parseInt(echoApiPort));
         ref.setSerializeProtocol(Enum.valueOf(RpcSerializeProtocol.class, protocol));
-        
+
         if (RpcSystemConfig.isMonitorServerSupport()) {
             context.register(ThreadPoolMonitorProvider.class);
             context.refresh();
@@ -66,6 +68,14 @@ public class NettyRpcRegistery implements InitializingBean, DisposableBean {
 
     public void setProtocol(String protocol) {
         this.protocol = protocol;
+    }
+
+    public String getEchoApiPort() {
+        return echoApiPort;
+    }
+
+    public void setEchoApiPort(String echoApiPort) {
+        this.echoApiPort = echoApiPort;
     }
 }
 

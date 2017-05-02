@@ -23,6 +23,6 @@ package com.newlandframework.rpc.core;
  * @since 2017/4/7
  */
 public interface AbilityDetail {
-    StringBuilder listAbilityDetail();
+    StringBuilder listAbilityDetail(boolean html);
 }
 

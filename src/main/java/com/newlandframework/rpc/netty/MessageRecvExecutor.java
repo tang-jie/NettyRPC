@@ -38,6 +38,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.logging.Level;
 
 import com.newlandframework.rpc.core.RpcSystemConfig;
@@ -49,6 +52,7 @@ import com.newlandframework.rpc.model.MessageResponse;
 import com.newlandframework.rpc.serialize.RpcSerializeProtocol;
 import com.newlandframework.rpc.compiler.AccessAdaptiveProvider;
 import com.newlandframework.rpc.core.AbilityDetailProvider;
+import com.newlandframework.rpc.netty.resolver.ApiEchoResolver;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -64,6 +68,7 @@ import org.springframework.context.ApplicationContextAware;
 public class MessageRecvExecutor implements ApplicationContextAware {
 
     private String serverAddress;
+    private int echoApiPort;
     private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDKSERIALIZE;
     private static final String DELIMITER = RpcSystemConfig.DELIMITER;
     private int parallel = RpcSystemConfig.PARALLEL * 2;
@@ -71,6 +76,7 @@ public class MessageRecvExecutor implements ApplicationContextAware {
     private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_QUEUE_NUMS;
     private static volatile ListeningExecutorService threadPoolExecutor;
     private Map<String, Object> handlerMap = new ConcurrentHashMap<String, Object>();
+    private int numberOfEchoThreadsPool = 1;
 
     ThreadFactory threadRpcFactory = new NamedThreadFactory("NettyRPC ThreadFactory");
     EventLoopGroup boss = new NioEventLoopGroup();
@@ -147,8 +153,24 @@ public class MessageRecvExecutor implements ApplicationContextAware {
                 int port = Integer.parseInt(ipAddr[1]);
                 ChannelFuture future = null;
                 future = bootstrap.bind(host, port).sync();
-                System.out.printf("[author tangjie] Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\n\n", host, port, serializeProtocol);
-                future.channel().closeFuture().sync();
+
+                future.addListener(new ChannelFutureListener() {
+                    @Override
+                    public void operationComplete(final ChannelFuture channelFuture) throws Exception {
+                        if (channelFuture.isSuccess()) {
+                            ExecutorService executor = Executors.newFixedThreadPool(numberOfEchoThreadsPool);
+                            ExecutorCompletionService<Boolean> completionService = new ExecutorCompletionService<Boolean>(executor);
+                            completionService.submit(new ApiEchoResolver(host, echoApiPort));
+                            System.out.printf("[author tangjie] Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\n\n", host, port, serializeProtocol);
+                            channelFuture.channel().closeFuture().sync().addListener(new ChannelFutureListener() {
+                                @Override
+                                public void operationComplete(ChannelFuture future) throws Exception {
+                                    executor.shutdownNow();
+                                }
+                            });
+                        }
+                    }
+                });
             } else {
                 System.out.printf("[author tangjie] Netty RPC Server start fail!\n");
             }
@@ -189,5 +211,13 @@ public class MessageRecvExecutor implements ApplicationContextAware {
 
     public void setSerializeProtocol(RpcSerializeProtocol serializeProtocol) {
         this.serializeProtocol = serializeProtocol;
+    }
+
+    public int getEchoApiPort() {
+        return echoApiPort;
+    }
+
+    public void setEchoApiPort(int echoApiPort) {
+        this.echoApiPort = echoApiPort;
     }
 }

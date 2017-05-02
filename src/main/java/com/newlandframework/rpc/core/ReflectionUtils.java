@@ -142,14 +142,14 @@ public class ReflectionUtils {
         }
     }
 
-    private void listField(Field f) {
-        provider.append("  " + modifiers(f.getModifiers()) +
+    private void listField(Field f, boolean html) {
+        provider.append((html ? "&nbsp&nbsp" : "  ") + modifiers(f.getModifiers()) +
                 getType(f.getType()) + " " +
-                f.getName() + ";");
+                f.getName() + (html ? ";<br>" : ";\n"));
     }
 
-    private void listMethod(Executable member) {
-        provider.append("\n  " + modifiers(member.getModifiers()));
+    private void listMethod(Executable member, boolean html) {
+        provider.append(html ? "<br>&nbsp&nbsp" : "\n  " + modifiers(member.getModifiers()));
         if (member instanceof Method) {
             provider.append(getType(((Method) member).getReturnType()) + " ");
         }
@@ -164,29 +164,29 @@ public class ReflectionUtils {
         provider.append(";");
     }
 
-    public void listRpcProviderDetail(Class<?> c) {
+    public void listRpcProviderDetail(Class<?> c, boolean html) {
         if (!c.isInterface()) {
             return;
         } else {
             provider.append(Modifier.toString(c.getModifiers()) + " " + c.getName());
-            provider.append(" {\n");
+            provider.append(html ? " {<br>" : " {\n");
 
             boolean hasFields = false;
             Field[] fields = c.getDeclaredFields();
             if (fields.length != 0) {
-                provider.append("  // Fields\n");
+                provider.append(html ? "&nbsp&nbsp//&nbspFields<br>" : "  // Fields\n");
                 hasFields = true;
                 for (Field field : fields) {
-                    listField(field);
+                    listField(field, html);
                 }
             }
 
-            provider.append(hasFields ? "\n  // Methods" : "  // Methods");
+            provider.append(hasFields ? (html ? "<br>&nbsp&nbsp//&nbspMethods" : "\n  // Methods") : (html ? "&nbsp&nbsp//&nbspMethods" : "  // Methods"));
             Method[] methods = c.getDeclaredMethods();
             for (Method method : methods) {
-                listMethod(method);
+                listMethod(method, html);
             }
-            provider.append("\n}\n");
+            provider.append(html ? "<br>}<p>" : "\n}\n\n");
         }
     }
 }

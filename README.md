@@ -55,6 +55,15 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * NettyRPC客户端支持重连功能：这点主要是针对RPC服务器宕机的情形下，RPC客户端可以检测链路情况，如果链路不通，则自动重连（重连重试的时间默认为10s）。
 
 ----------
+## NettyRPC 2.3 Build 2017/7/28 by tangjie
+
+**在NettyRPC 2.2的基础上新增NettyRPC过滤器功能：**
+* 进一步合理地分配和利用服务端的系统资源，NettyRPC可以针对某些特定的RPC请求，进行过滤拦截。
+* 具体过滤器要实现：com.newlandframework.rpc.filter.Filter接口定义的方法。
+* 被拦截到的RPC请求，NettyRPC框架会抛出com.newlandframework.rpc.exception.RejectResponeException异常，可以根据需要进行捕获。
+* spring配置文件中的nettyrpc:service标签，新增filter属性，用来定义这个服务对应的过滤器的实现。当然，filter属性是可选的。
+
+----------
 ## NettyRPC相关博客文章
 if you want to know more details,okey!you can see my blog:
 

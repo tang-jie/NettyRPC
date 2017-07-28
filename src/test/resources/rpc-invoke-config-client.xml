@@ -18,4 +18,8 @@
                         protocol="PROTOSTUFFSERIALIZE" ipAddr="${rpc.server.addr}"/>
     <nettyrpc:reference id="ability" interfaceName="com.newlandframework.rpc.core.AbilityDetail"
                         protocol="PROTOSTUFFSERIALIZE" ipAddr="${rpc.server.addr}"/>
+    <nettyrpc:reference id="cache" interfaceName="com.newlandframework.rpc.services.Cache"
+                        protocol="PROTOSTUFFSERIALIZE" ipAddr="${rpc.server.addr}"/>
+    <nettyrpc:reference id="store" interfaceName="com.newlandframework.rpc.services.Store"
+                        protocol="PROTOSTUFFSERIALIZE" ipAddr="${rpc.server.addr}"/>
 </beans>

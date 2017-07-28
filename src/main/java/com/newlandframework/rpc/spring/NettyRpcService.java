@@ -16,7 +16,10 @@
 package com.newlandframework.rpc.spring;
 
 import com.newlandframework.rpc.event.ServerStartEvent;
+import com.newlandframework.rpc.filter.ServiceFilterBinder;
+import com.newlandframework.rpc.filter.Filter;
 import com.newlandframework.rpc.netty.MessageRecvExecutor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -33,26 +36,20 @@ import org.springframework.context.ApplicationListener;
 public class NettyRpcService implements ApplicationContextAware, ApplicationListener {
     private String interfaceName;
     private String ref;
+    private String filter;
     private ApplicationContext applicationContext;
 
-    public String getRef() {
-        return ref;
-    }
-
-    public void setRef(String ref) {
-        this.ref = ref;
-    }
-
     public void onApplicationEvent(ApplicationEvent event) {
-        MessageRecvExecutor.getInstance().getHandlerMap().put(interfaceName, applicationContext.getBean(ref));
-    }
+        ServiceFilterBinder binder = new ServiceFilterBinder();
 
-    public String getInterfaceName() {
-        return interfaceName;
-    }
+        if (StringUtils.isBlank(filter) || !(applicationContext.getBean(filter) instanceof Filter)) {
+            binder.setObject(applicationContext.getBean(ref));
+        } else {
+            binder.setObject(applicationContext.getBean(ref));
+            binder.setFilter((Filter) applicationContext.getBean(filter));
+        }
 
-    public void setInterfaceName(String interfaceName) {
-        this.interfaceName = interfaceName;
+        MessageRecvExecutor.getInstance().getHandlerMap().put(interfaceName, binder);
     }
 
     public void setApplicationContext(ApplicationContext applicationContext)
@@ -63,5 +60,29 @@ public class NettyRpcService implements ApplicationContextAware, ApplicationList
 
     public ApplicationContext getApplicationContext() {
         return applicationContext;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public String getRef() {
+        return ref;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
+
+    public String getInterfaceName() {
+        return interfaceName;
+    }
+
+    public void setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
     }
 }

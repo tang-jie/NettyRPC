@@ -34,6 +34,7 @@ public class RpcSystemConfig {
     public static final String DELIMITER = ":";
     public static final String RPC_COMPILER_SPI_ATTR = "com.newlandframework.rpc.compiler.AccessAdaptive";
     public static final String RPC_ABILITY_DETAIL_SPI_ATTR = "com.newlandframework.rpc.core.AbilityDetail";
+    public static final String FILTER_RESPONSE_MSG = "Illegal request,NettyRPC server refused to respond!";
 
     private static boolean monitorServerSupport = false;
 

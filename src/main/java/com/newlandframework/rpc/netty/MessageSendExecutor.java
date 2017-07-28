@@ -52,7 +52,7 @@ public class MessageSendExecutor {
         loader.unLoad();
     }
 
-    public static <T> T execute(Class<T> rpcInterface) {
+    public static <T> T execute(Class<T> rpcInterface) throws Exception {
         return (T) Reflection.newProxy(rpcInterface, new MessageSendProxy<T>());
     }
 }

@@ -7,6 +7,7 @@
 				<xsd:extension base="beans:identifiedType">
 					<xsd:attribute name="interfaceName" type="xsd:string" use="required"/>
 					<xsd:attribute name="ref" type="xsd:string" use="required"/>
+					<xsd:attribute name="filter" type="xsd:string" use="optional"/>
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>

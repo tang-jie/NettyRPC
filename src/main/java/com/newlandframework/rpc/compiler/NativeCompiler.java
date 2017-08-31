@@ -87,5 +87,9 @@ public class NativeCompiler implements Closeable {
             throw new AssertionError(e);
         }
     }
+
+    public URLClassLoader getClassLoader() {
+        return classLoader;
+    }
 }
 

@@ -16,7 +16,9 @@
 package com.newlandframework.rpc.core;
 
 import com.google.common.collect.ImmutableMap;
+import com.newlandframework.rpc.exception.CreateProxyException;
 
+import java.io.Serializable;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
@@ -26,6 +28,8 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
@@ -63,6 +67,85 @@ public class ReflectionUtils {
         builder.put(float.class, Float.valueOf(0));
         builder.put(int.class, Integer.valueOf(0));
         builder.put(long.class, Long.valueOf(0));
+    }
+
+    public static Class<?>[] filterInterfaces(Class<?>[] proxyClasses) {
+        Set<Class<?>> interfaces = new HashSet<Class<?>>();
+        for (Class<?> proxyClass : proxyClasses) {
+            if (proxyClass.isInterface()) {
+                interfaces.add(proxyClass);
+            }
+        }
+
+        interfaces.add(Serializable.class);
+        return interfaces.toArray(new Class[interfaces.size()]);
+    }
+
+    public static Class<?>[] filterNonInterfaces(Class<?>[] proxyClasses) {
+        Set<Class<?>> superclasses = new HashSet<Class<?>>();
+        for (Class<?> proxyClass : proxyClasses) {
+            if (!proxyClass.isInterface()) {
+                superclasses.add(proxyClass);
+            }
+        }
+
+        return superclasses.toArray(new Class[superclasses.size()]);
+    }
+
+    public static boolean existDefaultConstructor(Class<?> superclass) {
+        final Constructor<?>[] declaredConstructors = superclass.getDeclaredConstructors();
+        for (int i = 0; i < declaredConstructors.length; i++) {
+            Constructor<?> constructor = declaredConstructors[i];
+            if (constructor.getParameterTypes().length == 0
+                    && (Modifier.isPublic(constructor.getModifiers()) || Modifier.isProtected(constructor
+                    .getModifiers()))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static Class<?> getParentClass(Class<?>[] proxyClasses) {
+        final Class<?>[] parent = filterNonInterfaces(proxyClasses);
+        switch (parent.length) {
+            case 0:
+                return Object.class;
+            case 1:
+                Class<?> superclass = parent[0];
+                if (Modifier.isFinal(superclass.getModifiers())) {
+                    throw new CreateProxyException(
+                            "proxy can't build " + superclass.getName() + " because it is final");
+                }
+                if (!existDefaultConstructor(superclass)) {
+                    throw new CreateProxyException(
+                            "proxy can't build " + superclass.getName() + ", because it has no default constructor");
+                }
+
+                return superclass;
+            default:
+                StringBuilder errorMessage = new StringBuilder("proxy class can't build");
+                for (int i = 0; i < parent.length; i++) {
+                    Class<?> c = parent[i];
+                    errorMessage.append(c.getName());
+                    if (i != parent.length - 1) {
+                        errorMessage.append(", ");
+                    }
+                }
+
+                errorMessage.append("; multiple implement not allowed");
+                throw new CreateProxyException(errorMessage.toString());
+        }
+    }
+
+    public static boolean isHashCodeMethod(Method method) {
+        return "hashCode".equals(method.getName()) && Integer.TYPE.equals(method.getReturnType())
+                && method.getParameterTypes().length == 0;
+    }
+
+    public static boolean isEqualsMethod(Method method) {
+        return "equals".equals(method.getName()) && Boolean.TYPE.equals(method.getReturnType())
+                && method.getParameterTypes().length == 1 && Object.class.equals(method.getParameterTypes()[0]);
     }
 
     public static Object newInstance(Class type) {

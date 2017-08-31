@@ -16,6 +16,7 @@
 package com.newlandframework.rpc.compiler;
 
 import com.google.common.io.Files;
+import com.newlandframework.rpc.compiler.intercept.SimpleMethodInterceptor;
 import com.newlandframework.rpc.core.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -33,16 +34,11 @@ import java.lang.reflect.InvocationTargetException;
 public class AccessAdaptiveProvider extends AbstractAccessAdaptive implements AccessAdaptive {
     @Override
     protected Class<?> doCompile(String clsName, String javaSource) throws Throwable {
-        NativeCompiler compiler = null;
-
-        try {
-            File tempFileLocation = Files.createTempDir();
-            compiler = new NativeCompiler(tempFileLocation);
-            Class type = compiler.compile(clsName, javaSource);
-            return type;
-        } finally {
-            compiler.close();
-        }
+        File tempFileLocation = Files.createTempDir();
+        compiler = new NativeCompiler(tempFileLocation);
+        Class type = compiler.compile(clsName, javaSource);
+        tempFileLocation.deleteOnExit();
+        return type;
     }
 
     @Override
@@ -51,16 +47,18 @@ public class AccessAdaptiveProvider extends AbstractAccessAdaptive implements Ac
             return null;
         } else {
             try {
-                ClassProxy main = new ClassProxy();
-                Class type = compile(javaSource, null);
-                Class<?> objectClass = main.createDynamicSubclass(type);
-                Object object = ReflectionUtils.newInstance(objectClass);
-                return MethodUtils.invokeMethod(object, method, args);
+                Class type = compile(javaSource, Thread.currentThread().getContextClassLoader());
+                Object object = ReflectionUtils.newInstance(type);
+                Thread.currentThread().getContextClassLoader().loadClass(type.getName());
+                Object proxy = getFactory().createProxy(object, new SimpleMethodInterceptor(), new Class[]{type});
+                return MethodUtils.invokeMethod(proxy, method, args);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
             return null;

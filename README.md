@@ -64,6 +64,15 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * spring配置文件中的nettyrpc:service标签，新增filter属性，用来定义这个服务对应的过滤器的实现。当然，filter属性是可选的。
 
 ----------
+## NettyRPC 2.4 Build 2017/8/31 by tangjie
+
+**在NettyRPC 2.3的基础上，增强了RPC服务端动态加载字节码时，对于热点方法的拦截判断能力：**
+* 在之前的NettyRPC版本中，RPC服务端集成了一个功能：针对Java HotSpot虚拟机的热加载特性，可以动态加载、生成并执行客户端的热点代码。然而却有一定的风险。因为这些代码中的某些方法，可能存在一些危及服务端安全的操作，所以有必要对这些方法进行拦截控制。
+* 技术难点在于：如何对服务端生成的字节码文件进行渲染加工？以往传统的方式，都是基于类进行代理渲染，而这次是针对字节码文件进行织入渲染，最终把拦截方法织入原有的字节码文件中。
+* 对字节码操作可选的方案有Byte Code Engineering Library (BCEL)、ASM等。最终从执行性能上考虑，决定采用偏向底层的ASM，对字节码进行渲染织入增强，以节省性能开销。最终通过类加载器，重新把渲染后的字节码，载入运行时上下文环境。
+* 具体方法拦截器要实现：com.newlandframework.rpc.compiler.intercept.Interceptor接口定义的方法。NettyRPC框架提供了一个简易的拦截器实现：SimpleMethodInterceptor，可以在这里加入你的拦截判断逻辑。
+
+----------
 ## NettyRPC相关博客文章
 if you want to know more details,okey!you can see my blog:
 

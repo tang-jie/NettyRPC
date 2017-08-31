@@ -27,6 +27,7 @@ import java.util.List;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/3/30
  */
+@Deprecated
 public class ClassProxy {
     public <T> Class<T> createDynamicSubclass(Class<T> superclass) {
         Enhancer e = new Enhancer() {

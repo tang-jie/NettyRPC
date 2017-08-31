@@ -20,6 +20,9 @@ import java.io.StringWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.newlandframework.rpc.compiler.weaver.ClassProxy;
+import com.newlandframework.rpc.compiler.weaver.ProxyProvider;
+
 /**
  * @author tangjie<https://github.com/tang-jie>
  * @filename:AbstractAccessAdaptive.java
@@ -31,6 +34,9 @@ public abstract class AbstractAccessAdaptive implements Compiler {
     private static final Pattern PACKAGE_PATTERN = Pattern.compile("package\\s+([$_a-zA-Z][$_a-zA-Z0-9\\.]*);");
 
     private static final Pattern CLASS_PATTERN = Pattern.compile("class\\s+([$_a-zA-Z][$_a-zA-Z0-9]*)\\s+");
+
+    protected ClassProxy factory = new ProxyProvider();
+    protected NativeCompiler compiler = null;
 
     protected ClassLoader overrideThreadContextClassLoader(ClassLoader loader) {
         Thread currentThread = Thread.currentThread();
@@ -106,10 +112,17 @@ public abstract class AbstractAccessAdaptive implements Compiler {
                 throw t;
             } catch (Throwable t) {
                 throw new IllegalStateException("failed to compile class, cause: " + t.getMessage() + ", class: " + className + ", code: \n" + code + "\n, stack: " + report(t));
+            } finally {
+                overrideThreadContextClassLoader(compiler.getClassLoader());
+                compiler.close();
             }
         }
     }
 
     protected abstract Class<?> doCompile(String clsName, String javaSource) throws Throwable;
+
+    public ClassProxy getFactory() {
+        return factory;
+    }
 }
 

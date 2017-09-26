@@ -32,8 +32,8 @@ public class ProtostuffSerializeFactory extends BasePooledObjectFactory<Protostu
         return createProtostuff();
     }
 
-    public PooledObject<ProtostuffSerialize> wrap(ProtostuffSerialize hessian) {
-        return new DefaultPooledObject<ProtostuffSerialize>(hessian);
+    public PooledObject<ProtostuffSerialize> wrap(ProtostuffSerialize protostuff) {
+        return new DefaultPooledObject<ProtostuffSerialize>(protostuff);
     }
 
     private ProtostuffSerialize createProtostuff() {

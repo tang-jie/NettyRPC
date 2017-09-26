@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:nettyrpc="http://www.newlandframework.com/nettyrpc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.newlandframework.com/nettyrpc http://www.newlandframework.com/nettyrpc/nettyrpc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <context:property-placeholder location="classpath:rpc-server.properties"/>
+    <nettyrpc:service id="demoAddService" interfaceName="com.newlandframework.rpc.services.AddCalculate"
+                      ref="calcAddService"></nettyrpc:service>
+    <nettyrpc:service id="demoMultiService" interfaceName="com.newlandframework.rpc.services.MultiCalculate"
+                      ref="calcMultiService"></nettyrpc:service>
+    <nettyrpc:service id="demoPersonManage" interfaceName="com.newlandframework.rpc.services.PersonManage"
+                      ref="personManageService"></nettyrpc:service>
+    <nettyrpc:service id="demoPersonManageJdbc" interfaceName="com.newlandframework.rpc.services.JdbcPersonManage"
+                      ref="personManageServiceJdbc"></nettyrpc:service>
+    <nettyrpc:service id="demoCostTime" interfaceName="com.newlandframework.rpc.services.CostTimeCalculate"
+                      ref="costTimeCalculateService"></nettyrpc:service>
+
+    <nettyrpc:service id="demoCache" interfaceName="com.newlandframework.rpc.services.Cache"
+                      ref="cacheService" filter="simpleFilter"></nettyrpc:service>
+
+    <nettyrpc:service id="demoStore" interfaceName="com.newlandframework.rpc.services.Store"
+                      ref="storeService" filter="simpleFilter"></nettyrpc:service>
+
+    <nettyrpc:registry id="rpcRegistry" ipAddr="${rpc.server.addr}" echoApiPort="${rpc.server.echo.api.port}"
+                       protocol="PROTOSTUFFSERIALIZE"></nettyrpc:registry>
+
+    <bean id="calcAddService" class="com.newlandframework.rpc.services.impl.AddCalculateImpl"></bean>
+    <bean id="calcMultiService" class="com.newlandframework.rpc.services.impl.MultiCalculateImpl"></bean>
+    <bean id="personManageService" class="com.newlandframework.rpc.services.impl.PersonManageImpl"></bean>
+    <bean id="personManageServiceJdbc" class="com.newlandframework.rpc.services.impl.JdbcPersonManageImpl">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <bean id="costTimeCalculateService" class="com.newlandframework.rpc.services.impl.CostTimeCalculateImpl"></bean>
+    <bean id="cacheService" class="com.newlandframework.rpc.services.impl.CacheImpl"></bean>
+    <bean id="storeService" class="com.newlandframework.rpc.services.impl.StoreImpl"></bean>
+    <bean id="simpleFilter" class="com.newlandframework.rpc.filter.support.SimpleFilter"></bean>
+
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@10.1.0.211:1521:kf"/>
+        <property name="username" value="ccs_nd"/>
+        <property name="password" value="ccs_nd"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="sqlTxManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="sqlTxManager"/>
+</beans>

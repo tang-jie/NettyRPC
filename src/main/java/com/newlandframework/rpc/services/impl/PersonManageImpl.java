@@ -26,15 +26,32 @@ import com.newlandframework.rpc.services.pojo.Person;
  * @since 2016/11/7
  */
 public class PersonManageImpl implements PersonManage {
+    @Override
     public int save(Person p) {
         //your business logic code here!
         System.out.println("person data[" + p + "] has save!");
         return 0;
     }
 
+    @Override
     public void query(Person p) {
         //your business logic code here!
         System.out.println("person data[" + p + "] has query!");
+    }
+
+    @Override
+    public void check() {
+        throw new RuntimeException("person check fail!");
+    }
+
+    @Override
+    public boolean checkAge(Person p) {
+        if (p.getAge() < 18) {
+            throw new RuntimeException("person check age fail!");
+        } else {
+            System.out.println("person check age succ!");
+            return true;
+        }
     }
 }
 

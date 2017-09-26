@@ -21,6 +21,8 @@ import com.newlandframework.rpc.model.MessageResponse;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.NameMatchMethodPointcutAdvisor;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -60,7 +62,7 @@ public class MessageRecvInitializeTask implements Callable<Boolean> {
             }
             return Boolean.TRUE;
         } catch (Throwable t) {
-            response.setError(t.toString());
+            response.setError(getStackTrace(t));
             t.printStackTrace();
             System.err.printf("RPC Server invoke error!\n");
             return Boolean.FALSE;
@@ -77,6 +79,13 @@ public class MessageRecvInitializeTask implements Callable<Boolean> {
         Object obj = mi.invoke(request);
         setReturnNotNull(((MethodProxyAdvisor) advisor.getAdvice()).isReturnNotNull());
         return obj;
+    }
+
+    public String getStackTrace(Throwable ex) {
+        StringWriter buf = new StringWriter();
+        ex.printStackTrace(new PrintWriter(buf));
+
+        return buf.toString();
     }
 
     public boolean isReturnNotNull() {

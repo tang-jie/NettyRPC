@@ -18,6 +18,11 @@ package com.newlandframework.rpc.serialize.hessian;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
+import static com.newlandframework.rpc.core.RpcSystemConfig.SERIALIZE_POOL_MAX_TOTAL;
+import static com.newlandframework.rpc.core.RpcSystemConfig.SERIALIZE_POOL_MIN_IDLE;
+import static com.newlandframework.rpc.core.RpcSystemConfig.SERIALIZE_POOL_MAX_WAIT_MILLIS;
+import static com.newlandframework.rpc.core.RpcSystemConfig.SERIALIZE_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+
 /**
  * @author tangjie<https://github.com/tang-jie>
  * @filename:HessianSerializePool.java
@@ -38,7 +43,7 @@ public class HessianSerializePool {
         if (poolFactory == null) {
             synchronized (HessianSerializePool.class) {
                 if (poolFactory == null) {
-                    poolFactory = new HessianSerializePool();
+                    poolFactory = new HessianSerializePool(SERIALIZE_POOL_MAX_TOTAL, SERIALIZE_POOL_MIN_IDLE, SERIALIZE_POOL_MAX_WAIT_MILLIS, SERIALIZE_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS);
                 }
             }
         }

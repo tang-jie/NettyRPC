@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Newland Group Holding Limited
+ * Copyright (C) 2017 Newland Group Holding Limited
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.newlandframework.rpc.services;
-
-import com.newlandframework.rpc.services.pojo.Person;
+package com.newlandframework.rpc.exception;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:PersonManage.java
- * @description:PersonManage功能模块
+ * @filename:InvokeModuleException.java
+ * @description:InvokeModuleException功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2016/11/7
+ * @since 2017/9/26
  */
-public interface PersonManage {
-    int save(Person p);
+public class InvokeModuleException extends RuntimeException {
+    public InvokeModuleException() {
+        super();
+    }
 
-    void query(Person p);
+    public InvokeModuleException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    void check();
+    public InvokeModuleException(String message) {
+        super(message);
+    }
 
-    boolean checkAge(Person p);
+    public InvokeModuleException(Throwable cause) {
+        super(cause);
+    }
 }
+

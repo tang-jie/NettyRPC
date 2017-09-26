@@ -18,6 +18,11 @@ package com.newlandframework.rpc.serialize.protostuff;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
+import static com.newlandframework.rpc.core.RpcSystemConfig.SERIALIZE_POOL_MAX_TOTAL;
+import static com.newlandframework.rpc.core.RpcSystemConfig.SERIALIZE_POOL_MIN_IDLE;
+import static com.newlandframework.rpc.core.RpcSystemConfig.SERIALIZE_POOL_MAX_WAIT_MILLIS;
+import static com.newlandframework.rpc.core.RpcSystemConfig.SERIALIZE_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+
 /**
  * @author tangjie<https://github.com/tang-jie>
  * @filename:ProtostuffSerializePool.java
@@ -26,7 +31,6 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @since 2016/10/7
  */
 public class ProtostuffSerializePool {
-
     private GenericObjectPool<ProtostuffSerialize> ProtostuffPool;
     private static volatile ProtostuffSerializePool poolFactory = null;
 
@@ -38,7 +42,7 @@ public class ProtostuffSerializePool {
         if (poolFactory == null) {
             synchronized (ProtostuffSerializePool.class) {
                 if (poolFactory == null) {
-                    poolFactory = new ProtostuffSerializePool();
+                    poolFactory = new ProtostuffSerializePool(SERIALIZE_POOL_MAX_TOTAL, SERIALIZE_POOL_MIN_IDLE, SERIALIZE_POOL_MAX_WAIT_MILLIS, SERIALIZE_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS);
                 }
             }
         }

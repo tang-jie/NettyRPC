@@ -2,6 +2,10 @@
 high performance java rpc server base on netty framework,using kryo,hessian,protostuff support rpc message serialization.
 
 ----------
+## NettyRPC开发指南
+有兴趣的同学可以参考：[NettyRPC入门手册](https://github.com/tang-jie/NettyRPC/wiki/NettyRPC%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97)。
+
+----------
 ## NettyRPC 1.0 Build 2016/6/25 by tangjie
 
 ### NettyRPC 1.0 中文简介：
@@ -102,4 +106,4 @@ http://www.cnblogs.com/jietang/p/5983038.html
 ----------
 
 ## License
-[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html) Copyright (C) 2016 Newland Group Holding Limited
+[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)

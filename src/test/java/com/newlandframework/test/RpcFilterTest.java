@@ -57,6 +57,7 @@ public class RpcFilterTest {
             String obj = String.valueOf(i);
             try {
                 store.save(obj);
+                store.save(i);
             } catch (RejectResponeException ex) {
                 System.out.println("trace:" + ex.getMessage());
             }

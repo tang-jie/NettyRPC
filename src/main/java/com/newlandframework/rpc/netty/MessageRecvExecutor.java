@@ -21,6 +21,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
+import com.newlandframework.rpc.jmx.ModuleMetricsHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -149,8 +150,8 @@ public class MessageRecvExecutor implements ApplicationContextAware {
             String[] ipAddr = serverAddress.split(MessageRecvExecutor.DELIMITER);
 
             if (ipAddr.length == 2) {
-                String host = ipAddr[0];
-                int port = Integer.parseInt(ipAddr[1]);
+                final String host = ipAddr[0];
+                final int port = Integer.parseInt(ipAddr[1]);
                 ChannelFuture future = null;
                 future = bootstrap.bind(host, port).sync();
 
@@ -158,10 +159,10 @@ public class MessageRecvExecutor implements ApplicationContextAware {
                     @Override
                     public void operationComplete(final ChannelFuture channelFuture) throws Exception {
                         if (channelFuture.isSuccess()) {
-                            ExecutorService executor = Executors.newFixedThreadPool(numberOfEchoThreadsPool);
+                            final ExecutorService executor = Executors.newFixedThreadPool(numberOfEchoThreadsPool);
                             ExecutorCompletionService<Boolean> completionService = new ExecutorCompletionService<Boolean>(executor);
                             completionService.submit(new ApiEchoResolver(host, echoApiPort));
-                            System.out.printf("[author tangjie] Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\n\n", host, port, serializeProtocol);
+                            System.out.printf("[author tangjie] Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n", host, port, serializeProtocol, ModuleMetricsHandler.getStartTime(), (RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0 ? "open" : "close"));
                             channelFuture.channel().closeFuture().sync().addListener(new ChannelFutureListener() {
                                 @Override
                                 public void operationComplete(ChannelFuture future) throws Exception {

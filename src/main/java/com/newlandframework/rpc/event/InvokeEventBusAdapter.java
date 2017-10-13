@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.newlandframework.rpc.services;
+package com.newlandframework.rpc.event;
+
+import javax.management.Notification;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:Store.java
- * @description:Store功能模块
+ * @filename:InvokeEventBusAdapter.java
+ * @description:InvokeEventBusAdapter功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2017/7/28
+ * @since 2017/10/12
  */
-public interface Store {
-    void save(String object);
-
-    void save(int x);
+public class InvokeEventBusAdapter extends AbstractInvokeEventBus {
+    @Override
+    public Notification buildNotification(Object oldValue, Object newValue) {
+        return null;
+    }
 }
 

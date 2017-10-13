@@ -18,6 +18,8 @@ package com.newlandframework.rpc.services.impl;
 import com.newlandframework.rpc.services.PersonManage;
 import com.newlandframework.rpc.services.pojo.Person;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author tangjie<https://github.com/tang-jie>
  * @filename:PersonManageImpl.java
@@ -36,7 +38,12 @@ public class PersonManageImpl implements PersonManage {
     @Override
     public void query(Person p) {
         //your business logic code here!
-        System.out.println("person data[" + p + "] has query!");
+        try {
+            TimeUnit.SECONDS.sleep(3);
+            System.out.println("person data[" + p + "] has query!");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

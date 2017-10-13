@@ -13,26 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.newlandframework.rpc.services.impl;
+package com.newlandframework.rpc.event;
 
-import com.newlandframework.rpc.services.Store;
+import com.newlandframework.rpc.jmx.ModuleMetricsVisitor;
+
+import java.util.Observable;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:StoreImpl.java
- * @description:StoreImpl功能模块
+ * @filename:InvokeObserver.java
+ * @description:InvokeObserver功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2017/7/28
+ * @since 2017/10/12
  */
-public class StoreImpl implements Store {
-    @Override
-    public void save(String object) {
-        System.out.println("StoreImpl ## save string:[" + object + "]");
+public class InvokeObserver extends AbstractInvokeObserver {
+
+    public InvokeObserver(InvokeEventBusFacade facade, ModuleMetricsVisitor visitor) {
+        super(facade, visitor);
     }
 
     @Override
-    public void save(int x) {
-        System.out.println("StoreImpl ## save int:[" + x + "]");
+    public void update(Observable o, Object arg) {
+        if ((AbstractInvokeEventBus.ModuleEvent) arg == AbstractInvokeEventBus.ModuleEvent.INVOKE_EVENT) {
+            super.getFacade().fetchEvent(AbstractInvokeEventBus.ModuleEvent.INVOKE_EVENT).nofity(super.getVisitor().getInvokeCount(), super.getVisitor().incrementInvokeCount());
+        }
     }
 }
 

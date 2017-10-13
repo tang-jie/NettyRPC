@@ -39,6 +39,7 @@ public class RpcSystemConfig {
     public static final int SERIALIZE_POOL_MIN_IDLE = 10;
     public static final int SERIALIZE_POOL_MAX_WAIT_MILLIS = 5000;
     public static final int SERIALIZE_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS = 600000;
+    public static final int SYSTEM_PROPERTY_JMX_INVOKE_METRICS = Integer.getInteger("nettyrpc-jmx-invoke-metrics", 1);
 
     private static boolean monitorServerSupport = false;
 

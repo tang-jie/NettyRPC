@@ -15,10 +15,12 @@
  */
 package com.newlandframework.rpc.netty;
 
+import com.newlandframework.rpc.core.RpcSystemConfig;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import com.newlandframework.rpc.model.MessageRequest;
 import com.newlandframework.rpc.model.MessageResponse;
@@ -41,7 +43,8 @@ public class MessageRecvHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         MessageRequest request = (MessageRequest) msg;
         MessageResponse response = new MessageResponse();
-        MessageRecvInitializeTask recvTask = new MessageRecvInitializeTask(request, response, handlerMap);
+        boolean isMetrics = (RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0);
+        Callable<Boolean> recvTask = isMetrics ? new MessageRecvInitializeTask(request, response, handlerMap) : new MessageRecvInitializeTaskAdapter(request, response, handlerMap);
         MessageRecvExecutor.submit(recvTask, ctx, request, response);
     }
 

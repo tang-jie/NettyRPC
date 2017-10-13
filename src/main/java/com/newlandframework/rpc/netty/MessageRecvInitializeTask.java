@@ -15,16 +15,19 @@
  */
 package com.newlandframework.rpc.netty;
 
-import com.newlandframework.rpc.core.RpcSystemConfig;
+import com.newlandframework.rpc.core.ReflectionUtils;
+import com.newlandframework.rpc.event.*;
+import com.newlandframework.rpc.event.AbstractInvokeEventBus.ModuleEvent;
+import com.newlandframework.rpc.filter.ServiceFilterBinder;
+import com.newlandframework.rpc.jmx.ModuleMetricsHandler;
+import com.newlandframework.rpc.jmx.ModuleMetricsVisitor;
 import com.newlandframework.rpc.model.MessageRequest;
 import com.newlandframework.rpc.model.MessageResponse;
-import org.springframework.aop.framework.ProxyFactory;
-import org.springframework.aop.support.NameMatchMethodPointcutAdvisor;
+import com.newlandframework.rpc.parallel.SemaphoreWrapperFactory;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
@@ -33,78 +36,63 @@ import java.util.concurrent.Callable;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
-public class MessageRecvInitializeTask implements Callable<Boolean> {
-
-    private MessageRequest request = null;
-    private MessageResponse response = null;
-    private Map<String, Object> handlerMap = null;
-    private static final String METHOD_MAPPED_NAME = "invoke";
-    private boolean returnNotNull = true;
+public class MessageRecvInitializeTask extends AbstractMessageRecvInitializeTask {
+    private AtomicReference<ModuleMetricsVisitor> visitor = new AtomicReference<ModuleMetricsVisitor>();
+    private AtomicReference<InvokeEventBusFacade> facade = new AtomicReference<InvokeEventBusFacade>();
+    private AtomicReference<InvokeEventWatcher> watcher = new AtomicReference<InvokeEventWatcher>(new InvokeEventWatcher());
 
     MessageRecvInitializeTask(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
-        this.request = request;
-        this.response = response;
-        this.handlerMap = handlerMap;
+        super(request, response, handlerMap);
     }
 
-    public Boolean call() {
-        response.setMessageId(request.getMessageId());
+    @Override
+    protected void injectInvoke() {
+        Class cls = handlerMap.get(request.getClassName()).getClass();
+        boolean binder = ServiceFilterBinder.class.isAssignableFrom(cls);
+        if (binder) {
+            cls = ((ServiceFilterBinder) handlerMap.get(request.getClassName())).getObject().getClass();
+        }
+
+        ReflectionUtils utils = new ReflectionUtils();
+
         try {
-            Object result = reflect(request);
-            if ((returnNotNull && result != null) || !returnNotNull) {
-                response.setResult(result);
-                response.setError("");
-                response.setReturnNotNull(returnNotNull);
-            } else {
-                System.err.println(RpcSystemConfig.FILTER_RESPONSE_MSG);
-                response.setResult(null);
-                response.setError(RpcSystemConfig.FILTER_RESPONSE_MSG);
-            }
-            return Boolean.TRUE;
-        } catch (Throwable t) {
-            response.setError(getStackTrace(t));
-            t.printStackTrace();
-            System.err.printf("RPC Server invoke error!\n");
-            return Boolean.FALSE;
+            Method method = ReflectionUtils.getDeclaredMethod(cls, request.getMethodName(), request.getTypeParameters());
+            utils.listMethod(method, false);
+            String signatureMethod = utils.getProvider().toString();
+            visitor.set(ModuleMetricsHandler.getInstance().visit(request.getClassName(), signatureMethod));
+            facade.set(new InvokeEventBusFacade(ModuleMetricsHandler.getInstance(), visitor.get().getModuleName(), visitor.get().getMethodName()));
+            watcher.get().addObserver(new InvokeObserver(facade.get(), visitor.get()));
+            watcher.get().watch(ModuleEvent.INVOKE_EVENT);
+        } finally {
+            utils.clearProvider();
         }
     }
 
-    private Object reflect(MessageRequest request) throws Throwable {
-        ProxyFactory weaver = new ProxyFactory(new MethodInvoker());
-        NameMatchMethodPointcutAdvisor advisor = new NameMatchMethodPointcutAdvisor();
-        advisor.setMappedName(METHOD_MAPPED_NAME);
-        advisor.setAdvice(new MethodProxyAdvisor(handlerMap));
-        weaver.addAdvisor(advisor);
-        MethodInvoker mi = (MethodInvoker) weaver.getProxy();
-        Object obj = mi.invoke(request);
-        setReturnNotNull(((MethodProxyAdvisor) advisor.getAdvice()).isReturnNotNull());
-        return obj;
+    @Override
+    protected void injectSuccInvoke(long invokeTimespan) {
+        watcher.get().addObserver(new InvokeSuccObserver(facade.get(), visitor.get(), invokeTimespan));
+        watcher.get().watch(ModuleEvent.INVOKE_SUCC_EVENT);
     }
 
-    public String getStackTrace(Throwable ex) {
-        StringWriter buf = new StringWriter();
-        ex.printStackTrace(new PrintWriter(buf));
-
-        return buf.toString();
+    @Override
+    protected void injectFailInvoke(Throwable error) {
+        watcher.get().addObserver(new InvokeFailObserver(facade.get(), visitor.get(), error));
+        watcher.get().watch(ModuleEvent.INVOKE_FAIL_EVENT);
     }
 
-    public boolean isReturnNotNull() {
-        return returnNotNull;
+    @Override
+    protected void injectFilterInvoke() {
+        watcher.get().addObserver(new InvokeFilterObserver(facade.get(), visitor.get()));
+        watcher.get().watch(ModuleEvent.INVOKE_FILTER_EVENT);
     }
 
-    public void setReturnNotNull(boolean returnNotNull) {
-        this.returnNotNull = returnNotNull;
+    @Override
+    protected void acquire() {
+        SemaphoreWrapperFactory.getInstance().acquire();
     }
 
-    public MessageResponse getResponse() {
-        return response;
-    }
-
-    public MessageRequest getRequest() {
-        return request;
-    }
-
-    public void setRequest(MessageRequest request) {
-        this.request = request;
+    @Override
+    protected void release() {
+        SemaphoreWrapperFactory.getInstance().release();
     }
 }

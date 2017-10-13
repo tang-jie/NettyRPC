@@ -47,8 +47,8 @@ public class ModuleMetricsVisitor {
     private long invokeMinTimespan = 3600 * 1000L;
     private long invokeMaxTimespan = 0L;
     private long invokeHistogram[];
-    private Exception lastStatckTrace;
-    private String lastStatckTraceDetail;
+    private Exception lastStackTrace;
+    private String lastStackTraceDetail;
     private long lastErrorTime;
 
     private Histogram histogram = new Histogram(TimeUnit.MILLISECONDS, new long[]{1, 10, 100, 1000, 10 * 1000, 100 * 1000, 1000 * 1000});
@@ -72,12 +72,12 @@ public class ModuleMetricsVisitor {
     public void reset() {
         moduleName = "";
         methodName = "";
-        lastStatckTraceDetail = "";
+        lastStackTraceDetail = "";
         invokeTimespan = 0L;
         invokeMinTimespan = 0L;
         invokeMaxTimespan = 0L;
         lastErrorTime = 0L;
-        lastStatckTrace = null;
+        lastStackTrace = null;
         invokeCountUpdater.set(this, 0);
         invokeSuccCountUpdater.set(this, 0);
         invokeFailCountUpdater.set(this, 0);
@@ -94,12 +94,12 @@ public class ModuleMetricsVisitor {
     }
 
     public String getLastStackTrace() {
-        if (lastStatckTrace == null) {
+        if (lastStackTrace == null) {
             return null;
         }
 
         StringWriter buf = new StringWriter();
-        lastStatckTrace.printStackTrace(new PrintWriter(buf));
+        lastStackTrace.printStackTrace(new PrintWriter(buf));
         return buf.toString();
     }
 
@@ -110,14 +110,14 @@ public class ModuleMetricsVisitor {
         return buf.toString();
     }
 
-    public void setLastStatckTrace(Exception lastStatckTrace) {
-        this.lastStatckTrace = lastStatckTrace;
-        this.lastStatckTraceDetail = getLastStackTrace();
+    public void setLastStackTrace(Exception lastStackTrace) {
+        this.lastStackTrace = lastStackTrace;
+        this.lastStackTraceDetail = getLastStackTrace();
         this.lastErrorTime = System.currentTimeMillis();
     }
 
-    public String getLastStatckTraceDetail() {
-        return lastStatckTraceDetail;
+    public String getLastStackTraceDetail() {
+        return lastStackTraceDetail;
     }
 
     public CompositeType getThrowableCompositeType() throws JMException {
@@ -128,7 +128,7 @@ public class ModuleMetricsVisitor {
                     THROWABLE_DESCRIPTIONS,
                     THROWABLE_TYPES);
         }
-        
+
         return THROWABLE_COMPOSITE_TYPE;
     }
 

@@ -69,7 +69,7 @@ public class ModuleMetricsListener implements NotificationListener {
                 break;
             case INVOKE_FAIL_STACKTRACE_EVENT:
                 try {
-                    visitor.setLastStatckTrace((Exception) acn.getNewValue());
+                    visitor.setLastStackTrace((Exception) acn.getNewValue());
                     visitor.buildErrorCompositeData((Exception) acn.getNewValue());
                 } catch (JMException e) {
                     e.printStackTrace();

@@ -45,8 +45,8 @@ public class InvokeFailObserver extends AbstractInvokeObserver {
     @Override
     public void update(Observable o, Object arg) {
         if ((AbstractInvokeEventBus.ModuleEvent) arg == AbstractInvokeEventBus.ModuleEvent.INVOKE_FAIL_EVENT) {
-            super.getFacade().fetchEvent(AbstractInvokeEventBus.ModuleEvent.INVOKE_FAIL_EVENT).nofity(super.getVisitor().getInvokeFailCount(), super.getVisitor().incrementInvokeFailCount());
-            super.getFacade().fetchEvent(AbstractInvokeEventBus.ModuleEvent.INVOKE_FAIL_STACKTRACE_EVENT).nofity(null, error);
+            super.getFacade().fetchEvent(AbstractInvokeEventBus.ModuleEvent.INVOKE_FAIL_EVENT).notify(super.getVisitor().getInvokeFailCount(), super.getVisitor().incrementInvokeFailCount());
+            super.getFacade().fetchEvent(AbstractInvokeEventBus.ModuleEvent.INVOKE_FAIL_STACKTRACE_EVENT).notify(null, error);
         }
     }
 }

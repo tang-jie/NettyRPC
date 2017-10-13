@@ -53,7 +53,7 @@ public abstract class AbstractInvokeEventBus {
 
     public abstract Notification buildNotification(Object oldValue, Object newValue);
 
-    public void nofity(Object oldValue, Object newValue) {
+    public void notify(Object oldValue, Object newValue) {
         Notification notification = buildNotification(oldValue, newValue);
         handler.sendNotification(notification);
     }

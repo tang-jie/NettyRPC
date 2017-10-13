@@ -35,7 +35,7 @@ public class InvokeFilterObserver extends AbstractInvokeObserver {
     @Override
     public void update(Observable o, Object arg) {
         if ((AbstractInvokeEventBus.ModuleEvent) arg == AbstractInvokeEventBus.ModuleEvent.INVOKE_FILTER_EVENT) {
-            super.getFacade().fetchEvent(AbstractInvokeEventBus.ModuleEvent.INVOKE_FILTER_EVENT).nofity(super.getVisitor().getInvokeFilterCount(), super.getVisitor().incrementInvokeFilterCount());
+            super.getFacade().fetchEvent(AbstractInvokeEventBus.ModuleEvent.INVOKE_FILTER_EVENT).notify(super.getVisitor().getInvokeFilterCount(), super.getVisitor().incrementInvokeFilterCount());
         }
     }
 }

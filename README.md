@@ -6,7 +6,7 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 有兴趣的同学可以参考：[NettyRPC入门手册](https://github.com/tang-jie/NettyRPC/wiki/NettyRPC%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97)。
 
 ----------
-## NettyRPC 1.0 Build 2016/6/25 by tangjie
+## NettyRPC 1.0 Build 2016/6/25
 
 ### NettyRPC 1.0 中文简介：
 **NettyRPC是基于Netty构建的RPC系统，消息网络传输支持目前主流的编码解码器**
@@ -27,7 +27,7 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * multi thread model using guava thread framework.
 
 ----------
-## NettyRPC 2.0 Build 2016/10/7 by tangjie
+## NettyRPC 2.0 Build 2016/10/7
 
 ### NettyRPC 2.0 中文简介：
 **NettyRPC 2.0是基于NettyRPC 1.0 在Maven下构建的RPC系统，在原有1.0版本的基础上对代码进行重构升级，主要改进点如下：**
@@ -44,22 +44,21 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * NettyRPC JMX monitoring support.
 
 ----------
-## NettyRPC 2.1 Build 2017/3/23 by tangjie
+## NettyRPC 2.1 Build 2017/3/23
 
 **在NettyRPC 2.0的基础上新增NettyRPC异步回调功能模块：**
 * 基于cglib生成异步代理Mock对象，针对一些极端耗时的RPC调用场景进行异步回调，从而提高客户端的并行吞吐量。
 
 ----------
-## NettyRPC 2.2 Build 2017/5/2 by tangjie
+## NettyRPC 2.2 Build 2017/5/2
 
 **在2.1版本的基础上，提供NettyRPC服务端接口能力展现功能：**
 * 接口能力展现功能模块部署在服务端的18886端口，可以在浏览器中输入：http://ip地址:18886/NettyRPC.html  进行查看。
-* 比如在浏览器的地址栏中输入：http://10.1.1.76:18886/NettyRPC.html  查询展现如下：
-![nettyrpc-http](docs/echo-api-2.jpg "nettyrpc-http")
+* 比如在浏览器的地址栏中输入：http://10.1.1.76:18886/NettyRPC.html，可以查看NettyRPC服务器对外暴露的服务能力接口信息。
 * NettyRPC客户端支持重连功能：这点主要是针对RPC服务器宕机的情形下，RPC客户端可以检测链路情况，如果链路不通，则自动重连（重连重试的时间默认为10s）。
 
 ----------
-## NettyRPC 2.3 Build 2017/7/28 by tangjie
+## NettyRPC 2.3 Build 2017/7/28
 
 **在NettyRPC 2.2的基础上新增NettyRPC过滤器功能：**
 * 进一步合理地分配和利用服务端的系统资源，NettyRPC可以针对某些特定的RPC请求，进行过滤拦截。
@@ -68,7 +67,7 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * spring配置文件中的nettyrpc:service标签，新增filter属性，用来定义这个服务对应的过滤器的实现。当然，filter属性是可选的。
 
 ----------
-## NettyRPC 2.4 Build 2017/8/31 by tangjie
+## NettyRPC 2.4 Build 2017/8/31
 
 **在NettyRPC 2.3的基础上，增强了RPC服务端动态加载字节码时，对于热点方法的拦截判断能力：**
 * 在之前的NettyRPC版本中，RPC服务端集成了一个功能：针对Java HotSpot虚拟机的热加载特性，可以动态加载、生成并执行客户端的热点代码。然而却有一定的风险。因为这些代码中的某些方法，可能存在一些危及服务端安全的操作，所以有必要对这些方法进行拦截控制。
@@ -77,10 +76,9 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * 具体方法拦截器要实现：com.newlandframework.rpc.compiler.intercept.Interceptor接口定义的方法。NettyRPC框架提供了一个简易的拦截器实现：SimpleMethodInterceptor，可以在这里加入你的拦截判断逻辑。
 
 ----------
-## NettyRPC 2.5 Build 2017/10/13 by tangjie
+## NettyRPC 2.5 Build 2017/10/13
 **在NettyRPC 2.4的基础上，基于JMX（Java Management Extensions）技术，对NettyRPC的服务端进行调用监控，加强服务端对调用请求的分析统计能力：**
-* 是否开启JMX监控，可以通过环境变量：nettyrpc-jmx-invoke-metrics来控制（为0表示关闭JMX监控；非0表示打开JMX监控）。对应NettyRPC系统变量为：RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS。如果开启JMX监控，启动的时候，控制台上会打印JMX URL信息：
-![nettyrpc-jmx](docs/NettyRPC-Start.jpg "nettyrpc-jmx")
+* 是否开启JMX监控，可以通过环境变量：nettyrpc-jmx-invoke-metrics来控制（为0表示关闭JMX监控；非0表示打开JMX监控）。对应NettyRPC系统变量为：RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS。如果开启JMX监控，启动的时候，控制台上会打印JMX URL信息。
 * JMX监控的URL地址格式为：service:jmx:rmi:///jndi/rmi://服务器ip地址:1098/NettyRPCServer。比如：service:jmx:rmi:///jndi/rmi://10.1.8.5:1098/NettyRPCServer，然后可以在jconsole中，通过JMX对NettyRPC服务端的调用情况进行监控。
 * 目前服务端监控的维度主要有：调用次数、调用成功次数、调用失败次数、过滤拦截次数、调用时长、调用最大时长、调用最小时长、错误明细、最后一次错误发生的时间、调用时长统计数组区间。
 * 目前暂时只支持jconsole方式，后续会考虑在NettyRPC内部架设HTTP服务器，以网页的形式直观地展示监控数据信息。

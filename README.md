@@ -54,7 +54,7 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 
 **在2.1版本的基础上，提供NettyRPC服务端接口能力展现功能：**
 * 接口能力展现功能模块部署在服务端的18886端口，可以在浏览器中输入：http://ip地址:18886/NettyRPC.html  进行查看。
-* 比如在浏览器的地址栏中输入：http://10.1.1.76:18886/NettyRPC.html，可以查看NettyRPC服务器对外暴露的服务能力接口信息。
+* 比如在浏览器的地址栏中输入：http://10.1.1.76:18886/NettyRPC.html，  可以查看NettyRPC服务器对外暴露的服务能力接口信息。
 * NettyRPC客户端支持重连功能：这点主要是针对RPC服务器宕机的情形下，RPC客户端可以检测链路情况，如果链路不通，则自动重连（重连重试的时间默认为10s）。
 
 ----------

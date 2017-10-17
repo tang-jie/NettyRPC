@@ -48,9 +48,10 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
     }
 
     private ModuleMetricsHandler() {
-
+        super();
     }
 
+    @Override
     protected ModuleMetricsVisitor visitCriticalSection(String moduleName, String methodName) {
         final String method = methodName.trim();
         final String module = moduleName.trim();
@@ -58,6 +59,7 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
         //FIXME: 2017/10/13 by tangjie
         //JMX度量临界区要注意线程间的并发竞争,否则会统计数据失真
         Iterator iterator = new FilterIterator(visitorList.iterator(), new Predicate() {
+            @Override
             public boolean evaluate(Object object) {
                 String statModuleName = ((ModuleMetricsVisitor) object).getModuleName();
                 String statMethodName = ((ModuleMetricsVisitor) object).getMethodName();
@@ -153,9 +155,8 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            return connection;
         }
+        return connection;
     }
 
     public MBeanServerConnection getConnection() {

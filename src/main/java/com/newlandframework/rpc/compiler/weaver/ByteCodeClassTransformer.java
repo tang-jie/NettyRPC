@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/8/30
  */
-public class ByteCodeClassTransformer extends ClassTransformer implements Opcodes {
+public class ByteCodeClassTransformer extends AbstractClassTransformer implements Opcodes {
     private static final AtomicLong CLASS_NUMBER = new AtomicLong(0);
     private static final String CLASSNAME_PREFIX = "ASMPROXY_";
     private static final String HANDLER_NAME = "__handler";

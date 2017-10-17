@@ -21,6 +21,7 @@ import com.newlandframework.rpc.model.MessageResponse;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.NameMatchMethodPointcutAdvisor;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Map;
@@ -54,7 +55,8 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
             response.setMessageId(request.getMessageId());
             injectInvoke();
             Object result = reflect(request);
-            if ((returnNotNull && result != null) || !returnNotNull) {
+            boolean isInvokeSucc = ((returnNotNull && result != null) || !returnNotNull);
+            if (isInvokeSucc) {
                 response.setResult(result);
                 response.setError("");
                 response.setReturnNotNull(returnNotNull);

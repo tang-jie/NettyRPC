@@ -29,6 +29,7 @@ import io.netty.channel.ChannelPipeline;
  * @since 2016/10/7
  */
 public class HessianSendHandler implements NettyRpcSendHandler {
+    @Override
     public void handle(ChannelPipeline pipeline) {
         HessianCodecUtil util = new HessianCodecUtil();
         pipeline.addLast(new HessianEncoder(util));

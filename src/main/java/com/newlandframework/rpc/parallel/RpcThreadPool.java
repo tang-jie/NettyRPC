@@ -49,7 +49,7 @@ import java.util.concurrent.RejectedExecutionHandler;
  * @since 2016/10/7
  */
 public class RpcThreadPool {
-    private static final Timer timer = new Timer("ThreadPoolMonitor", true);
+    private static final Timer TIMER = new Timer("ThreadPoolMonitor", true);
     private static long monitorDelay = 100L;
     private static long monitorPeriod = 300L;
 
@@ -67,6 +67,9 @@ public class RpcThreadPool {
                 return new RejectedPolicy();
             case DISCARDED_POLICY:
                 return new DiscardedPolicy();
+            default: {
+                break;
+            }
         }
 
         return null;
@@ -79,9 +82,12 @@ public class RpcThreadPool {
             case LINKED_BLOCKING_QUEUE:
                 return new LinkedBlockingQueue<Runnable>();
             case ARRAY_BLOCKING_QUEUE:
-                return new ArrayBlockingQueue<Runnable>(RpcSystemConfig.PARALLEL * queues);
+                return new ArrayBlockingQueue<Runnable>(RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL * queues);
             case SYNCHRONOUS_QUEUE:
                 return new SynchronousQueue<Runnable>();
+            default: {
+                break;
+            }
         }
 
         return null;
@@ -98,8 +104,9 @@ public class RpcThreadPool {
 
     public static Executor getExecutorWithJmx(int threads, int queues) {
         final ThreadPoolExecutor executor = (ThreadPoolExecutor) getExecutor(threads, queues);
-        timer.scheduleAtFixedRate(new TimerTask() {
+        TIMER.scheduleAtFixedRate(new TimerTask() {
 
+            @Override
             public void run() {
                 ThreadPoolStatus status = new ThreadPoolStatus();
                 status.setPoolSize(executor.getPoolSize());

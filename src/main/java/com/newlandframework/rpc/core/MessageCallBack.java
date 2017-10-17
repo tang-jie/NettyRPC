@@ -48,7 +48,8 @@ public class MessageCallBack {
             lock.lock();
             finish.await(RpcSystemConfig.SYSTEM_PROPERTY_MESSAGE_CALLBACK_TIMEOUT, TimeUnit.MILLISECONDS);
             if (this.response != null) {
-                if (!this.response.getError().equals(RpcSystemConfig.FILTER_RESPONSE_MSG) && (!this.response.isReturnNotNull() || (this.response.isReturnNotNull() && this.response.getResult() != null))) {
+                boolean isInvokeSucc = getInvokeResult();
+                if (isInvokeSucc) {
                     if (this.response.getError().isEmpty()) {
                         return this.response.getResult();
                     } else {
@@ -73,5 +74,10 @@ public class MessageCallBack {
         } finally {
             lock.unlock();
         }
+    }
+
+    private boolean getInvokeResult() {
+        return (!this.response.getError().equals(RpcSystemConfig.FILTER_RESPONSE_MSG) &&
+                (!this.response.isReturnNotNull() || (this.response.isReturnNotNull() && this.response.getResult() != null)));
     }
 }

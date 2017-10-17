@@ -61,20 +61,24 @@ public class NettyRpcReference implements FactoryBean, InitializingBean, Disposa
         this.protocol = protocol;
     }
 
+    @Override
     public void destroy() throws Exception {
         eventBus.post(new ClientStopEvent(0));
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         MessageSendExecutor.getInstance().setRpcServerLoader(ipAddr, RpcSerializeProtocol.valueOf(protocol));
         ClientStopEventListener listener = new ClientStopEventListener();
         eventBus.register(listener);
     }
 
+    @Override
     public Object getObject() throws Exception {
         return MessageSendExecutor.getInstance().execute(getObjectType());
     }
 
+    @Override
     public Class<?> getObjectType() {
         try {
             return this.getClass().getClassLoader().loadClass(interfaceName);
@@ -84,6 +88,7 @@ public class NettyRpcReference implements FactoryBean, InitializingBean, Disposa
         return null;
     }
 
+    @Override
     public boolean isSingleton() {
         return true;
     }

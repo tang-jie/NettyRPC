@@ -29,6 +29,7 @@ import org.w3c.dom.Element;
  * @since 2016/10/7
  */
 public class NettyRpcReferenceParser implements BeanDefinitionParser {
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String interfaceName = element.getAttribute("interfaceName");
         String id = element.getAttribute("id");

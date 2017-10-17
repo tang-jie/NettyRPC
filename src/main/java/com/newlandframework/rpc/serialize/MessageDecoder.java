@@ -40,6 +40,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
         this.util = util;
     }
 
+    @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         if (in.readableBytes() < MessageDecoder.MESSAGE_LENGTH) {
             return;

@@ -35,6 +35,7 @@ public enum RpcSerializeProtocol {
         this.serializeProtocol = serializeProtocol;
     }
 
+    @Override
     public String toString() {
         ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.SHORT_PREFIX_STYLE);
         return ReflectionToStringBuilder.toString(this);

@@ -19,22 +19,21 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
-
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:ClassTransformer.java
- * @description:ClassTransformer功能模块
+ * @filename:AbstractClassTransformer.java
+ * @description:AbstractClassTransformer功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2017/8/30
+ * @since 2017/10/16
  */
-public abstract class ClassTransformer implements Transformer {
+public abstract class AbstractClassTransformer implements Transformer {
     @Override
     public Class<?> transform(ClassLoader classLoader, Class<?>... proxyClasses) {
         return null;
     }
 
     protected Method[] findImplementationMethods(Class<?>[] proxyClasses) {
-        Map<MethodDescriptor, Method> descriptorMap = new HashMap<MethodDescriptor, Method>();
+        Map<MethodDescriptor, Method> descriptorMap = new HashMap<MethodDescriptor, Method>(1024);
         Set<MethodDescriptor> finalSet = new HashSet<MethodDescriptor>();
 
         for (int i = 0; i < proxyClasses.length; i++) {
@@ -58,4 +57,3 @@ public abstract class ClassTransformer implements Transformer {
         return results.toArray(new Method[results.size()]);
     }
 }
-

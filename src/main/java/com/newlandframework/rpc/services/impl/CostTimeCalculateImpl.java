@@ -26,6 +26,7 @@ import com.newlandframework.rpc.services.pojo.CostTime;
  * @since 2017/3/22
  */
 public class CostTimeCalculateImpl implements CostTimeCalculate {
+    @Override
     public CostTime calculate() {
         CostTime elapse = new CostTime();
         try {

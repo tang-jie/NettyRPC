@@ -34,6 +34,7 @@ public class KryoPoolFactory {
     private static volatile KryoPoolFactory poolFactory = null;
 
     private KryoFactory factory = new KryoFactory() {
+        @Override
         public Kryo create() {
             Kryo kryo = new Kryo();
             kryo.setReferences(false);

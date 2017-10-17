@@ -27,11 +27,11 @@ import com.newlandframework.rpc.serialize.RpcSerializeProtocol;
  */
 public class MessageSendExecutor {
     private static class MessageSendExecutorHolder {
-        private static final MessageSendExecutor instance = new MessageSendExecutor();
+        private static final MessageSendExecutor INSTANCE = new MessageSendExecutor();
     }
 
     public static MessageSendExecutor getInstance() {
-        return MessageSendExecutorHolder.instance;
+        return MessageSendExecutorHolder.INSTANCE;
     }
 
     private RpcServerLoader loader = RpcServerLoader.getInstance();
@@ -52,7 +52,7 @@ public class MessageSendExecutor {
         loader.unLoad();
     }
 
-    public static <T> T execute(Class<T> rpcInterface) throws Exception {
+    public <T> T execute(Class<T> rpcInterface) throws Exception {
         return (T) Reflection.newProxy(rpcInterface, new MessageSendProxy<T>());
     }
 }

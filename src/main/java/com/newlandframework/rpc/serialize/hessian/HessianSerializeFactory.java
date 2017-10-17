@@ -28,10 +28,12 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  */
 public class HessianSerializeFactory extends BasePooledObjectFactory<HessianSerialize> {
 
+    @Override
     public HessianSerialize create() throws Exception {
         return createHessian();
     }
 
+    @Override
     public PooledObject<HessianSerialize> wrap(HessianSerialize hessian) {
         return new DefaultPooledObject<HessianSerialize>(hessian);
     }

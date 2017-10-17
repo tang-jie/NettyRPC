@@ -40,6 +40,7 @@ public class HessianCodecUtil implements MessageCodecUtil {
 
     }
 
+    @Override
     public void encode(final ByteBuf out, final Object message) throws IOException {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -56,6 +57,7 @@ public class HessianCodecUtil implements MessageCodecUtil {
         }
     }
 
+    @Override
     public Object decode(byte[] body) throws IOException {
         try {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body);

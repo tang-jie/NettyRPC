@@ -65,6 +65,7 @@ public class MessageResponse implements Serializable {
         this.result = result;
     }
 
+    @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this);
     }

@@ -31,11 +31,11 @@ import static com.newlandframework.rpc.core.RpcSystemConfig.SERIALIZE_POOL_MIN_E
  * @since 2016/10/7
  */
 public class ProtostuffSerializePool {
-    private GenericObjectPool<ProtostuffSerialize> ProtostuffPool;
+    private GenericObjectPool<ProtostuffSerialize> protostuffPool;
     private static volatile ProtostuffSerializePool poolFactory = null;
 
     private ProtostuffSerializePool() {
-        ProtostuffPool = new GenericObjectPool<ProtostuffSerialize>(new ProtostuffSerializeFactory());
+        protostuffPool = new GenericObjectPool<ProtostuffSerialize>(new ProtostuffSerializeFactory());
     }
 
     public static ProtostuffSerializePool getProtostuffPoolInstance() {
@@ -50,7 +50,7 @@ public class ProtostuffSerializePool {
     }
 
     public ProtostuffSerializePool(final int maxTotal, final int minIdle, final long maxWaitMillis, final long minEvictableIdleTimeMillis) {
-        ProtostuffPool = new GenericObjectPool<ProtostuffSerialize>(new ProtostuffSerializeFactory());
+        protostuffPool = new GenericObjectPool<ProtostuffSerialize>(new ProtostuffSerializeFactory());
 
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
 
@@ -59,7 +59,7 @@ public class ProtostuffSerializePool {
         config.setMaxWaitMillis(maxWaitMillis);
         config.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
 
-        ProtostuffPool.setConfig(config);
+        protostuffPool.setConfig(config);
     }
 
     public ProtostuffSerialize borrow() {
@@ -76,7 +76,7 @@ public class ProtostuffSerializePool {
     }
 
     public GenericObjectPool<ProtostuffSerialize> getProtostuffPool() {
-        return ProtostuffPool;
+        return protostuffPool;
     }
 }
 

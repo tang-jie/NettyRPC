@@ -72,6 +72,7 @@ public class AsyncInvoker {
 
     private <R> R submit(final AsyncCallback<R> callback, Class<?> returnClass) {
         Future future = submit(new Callable() {
+            @Override
             public R call() throws Exception {
                 return callback.call();
             }

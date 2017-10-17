@@ -37,6 +37,7 @@ public class NettyRpcRegistery implements InitializingBean, DisposableBean {
     private String echoApiPort;
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
+    @Override
     public void destroy() throws Exception {
         MessageRecvExecutor.getInstance().stop();
 
@@ -45,6 +46,7 @@ public class NettyRpcRegistery implements InitializingBean, DisposableBean {
         }
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
         ref.setServerAddress(ipAddr);

@@ -40,6 +40,7 @@ public class MessageRecvHandler extends ChannelInboundHandlerAdapter {
         this.handlerMap = handlerMap;
     }
 
+    @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         MessageRequest request = (MessageRequest) msg;
         MessageResponse response = new MessageResponse();
@@ -48,6 +49,7 @@ public class MessageRecvHandler extends ChannelInboundHandlerAdapter {
         MessageRecvExecutor.submit(recvTask, ctx, request, response);
     }
 
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
         ctx.close();

@@ -49,16 +49,19 @@ public class MessageSendHandler extends ChannelInboundHandlerAdapter {
         return remoteAddr;
     }
 
+    @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         this.remoteAddr = this.channel.remoteAddress();
     }
 
+    @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
         this.channel = ctx.channel();
     }
 
+    @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         MessageResponse response = (MessageResponse) msg;
         String messageId = response.getMessageId();
@@ -69,6 +72,7 @@ public class MessageSendHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
         ctx.close();

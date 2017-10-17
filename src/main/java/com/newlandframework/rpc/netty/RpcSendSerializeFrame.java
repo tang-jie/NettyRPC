@@ -44,6 +44,7 @@ public class RpcSendSerializeFrame implements RpcSerializeFrame {
         handler.putInstance(ProtostuffSendHandler.class, new ProtostuffSendHandler());
     }
 
+    @Override
     public void select(RpcSerializeProtocol protocol, ChannelPipeline pipeline) {
         switch (protocol) {
             case JDKSERIALIZE: {
@@ -60,6 +61,9 @@ public class RpcSendSerializeFrame implements RpcSerializeFrame {
             }
             case PROTOSTUFFSERIALIZE: {
                 handler.getInstance(ProtostuffSendHandler.class).handle(pipeline);
+                break;
+            }
+            default: {
                 break;
             }
         }

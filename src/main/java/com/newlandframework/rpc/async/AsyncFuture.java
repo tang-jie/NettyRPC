@@ -36,10 +36,12 @@ public class AsyncFuture<V> extends FutureTask<V> {
         callerThread = Thread.currentThread();
     }
 
+    @Override
     protected void done() {
         endTime = System.currentTimeMillis();
     }
 
+    @Override
     public void run() {
         startTime = System.currentTimeMillis();
         runnerThread = Thread.currentThread();

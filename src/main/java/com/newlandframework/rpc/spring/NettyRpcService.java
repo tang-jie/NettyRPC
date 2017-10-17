@@ -39,6 +39,7 @@ public class NettyRpcService implements ApplicationContextAware, ApplicationList
     private String filter;
     private ApplicationContext applicationContext;
 
+    @Override
     public void onApplicationEvent(ApplicationEvent event) {
         ServiceFilterBinder binder = new ServiceFilterBinder();
 
@@ -52,6 +53,7 @@ public class NettyRpcService implements ApplicationContextAware, ApplicationList
         MessageRecvExecutor.getInstance().getHandlerMap().put(interfaceName, binder);
     }
 
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext)
             throws BeansException {
         this.applicationContext = applicationContext;

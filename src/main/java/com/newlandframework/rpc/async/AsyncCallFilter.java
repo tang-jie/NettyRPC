@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
  * @since 2017/3/22
  */
 public class AsyncCallFilter implements CallbackFilter {
+    @Override
     public int accept(Method method) {
         return AsyncCallObject.class.isAssignableFrom(method.getDeclaringClass()) ? 1 : 0;
     }

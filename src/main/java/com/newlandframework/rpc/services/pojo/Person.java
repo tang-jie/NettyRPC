@@ -64,6 +64,7 @@ public class Person implements Serializable {
         this.name = name;
     }
 
+    @Override
     public String toString() {
         return birthday != null ? String.format("Person <<id:%d name:%s age:%d birthday:%s>>", id, name, age, birthday) : String.format("Person <<id:%d name:%s age:%d>>", id, name, age);
     }

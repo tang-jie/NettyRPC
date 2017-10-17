@@ -44,6 +44,7 @@ public class MessageRecvChannelInitializer extends ChannelInitializer<SocketChan
         frame = new RpcRecvSerializeFrame(handlerMap);
     }
 
+    @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline pipeline = socketChannel.pipeline();
         frame.select(protocol, pipeline);

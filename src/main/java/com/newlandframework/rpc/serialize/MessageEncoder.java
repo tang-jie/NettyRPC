@@ -34,6 +34,7 @@ public class MessageEncoder extends MessageToByteEncoder<Object> {
         this.util = util;
     }
 
+    @Override
     protected void encode(final ChannelHandlerContext ctx, final Object msg, final ByteBuf out) throws Exception {
         util.encode(out, msg);
     }

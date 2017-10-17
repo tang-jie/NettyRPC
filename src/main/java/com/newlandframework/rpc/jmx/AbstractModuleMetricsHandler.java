@@ -48,6 +48,10 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
     private final AtomicBoolean locked = new AtomicBoolean(false);
     private final Queue<Thread> waiters = new ConcurrentLinkedQueue<Thread>();
 
+    public AbstractModuleMetricsHandler() {
+
+    }
+
     public ModuleMetricsVisitor visit(String moduleName, String methodName) {
         try {
             enter();

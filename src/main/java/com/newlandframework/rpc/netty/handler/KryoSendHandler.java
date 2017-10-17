@@ -30,6 +30,7 @@ import io.netty.channel.ChannelPipeline;
  * @since 2016/10/7
  */
 public class KryoSendHandler implements NettyRpcSendHandler {
+    @Override
     public void handle(ChannelPipeline pipeline) {
         KryoCodecUtil util = new KryoCodecUtil(KryoPoolFactory.getKryoPoolInstance());
         pipeline.addLast(new KryoEncoder(util));

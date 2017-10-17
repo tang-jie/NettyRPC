@@ -37,6 +37,7 @@ public class MessageSendChannelInitializer extends ChannelInitializer<SocketChan
         return this;
     }
 
+    @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline pipeline = socketChannel.pipeline();
         frame.select(protocol, pipeline);

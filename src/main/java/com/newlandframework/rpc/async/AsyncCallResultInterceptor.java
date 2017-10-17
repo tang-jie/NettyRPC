@@ -32,6 +32,7 @@ public class AsyncCallResultInterceptor implements LazyLoader {
         this.result = result;
     }
 
+    @Override
     public Object loadObject() throws Exception {
         return result.loadFuture();
     }

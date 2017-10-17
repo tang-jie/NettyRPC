@@ -33,6 +33,7 @@ import com.newlandframework.rpc.serialize.RpcSerialize;
  */
 public class HessianSerialize implements RpcSerialize {
 
+    @Override
     public void serialize(OutputStream output, Object object) {
         Hessian2Output ho = new Hessian2Output(output);
         try {
@@ -46,6 +47,7 @@ public class HessianSerialize implements RpcSerialize {
         }
     }
 
+    @Override
     public Object deserialize(InputStream input) {
         Object result = null;
         try {

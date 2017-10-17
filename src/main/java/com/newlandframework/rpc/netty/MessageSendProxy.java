@@ -32,6 +32,7 @@ import com.newlandframework.rpc.model.MessageRequest;
  */
 public class MessageSendProxy<T> extends AbstractInvocationHandler {
 
+    @Override
     public Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
         MessageRequest request = new MessageRequest();
         request.setMessageId(UUID.randomUUID().toString());

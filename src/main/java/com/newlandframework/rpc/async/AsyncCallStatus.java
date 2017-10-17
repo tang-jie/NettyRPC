@@ -57,6 +57,7 @@ public class AsyncCallStatus {
         this.status = status;
     }
 
+    @Override
     public String toString() {
         return "AsyncLoadStatus [status=" + status + ", startTime=" + startTime + ", elapseTime=" + elapseTime + "]";
     }

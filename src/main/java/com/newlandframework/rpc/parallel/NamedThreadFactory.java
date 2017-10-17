@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NamedThreadFactory implements ThreadFactory {
 
-    private static final AtomicInteger threadNumber = new AtomicInteger(1);
+    private static final AtomicInteger THREAD_NUMBER = new AtomicInteger(1);
 
     private final AtomicInteger mThreadNum = new AtomicInteger(1);
 
@@ -40,7 +40,7 @@ public class NamedThreadFactory implements ThreadFactory {
     private final ThreadGroup threadGroup;
 
     public NamedThreadFactory() {
-        this("rpcserver-threadpool-" + threadNumber.getAndIncrement(), false);
+        this("rpcserver-threadpool-" + THREAD_NUMBER.getAndIncrement(), false);
     }
 
     public NamedThreadFactory(String prefix) {
@@ -54,6 +54,7 @@ public class NamedThreadFactory implements ThreadFactory {
         threadGroup = (s == null) ? Thread.currentThread().getThreadGroup() : s.getThreadGroup();
     }
 
+    @Override
     public Thread newThread(Runnable runnable) {
         String name = prefix + mThreadNum.getAndIncrement();
         Thread ret = new Thread(threadGroup, runnable, name, 0);

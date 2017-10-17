@@ -55,6 +55,7 @@ public class NettyRpcNamespaceHandler extends NamespaceHandlerSupport {
         }
     }
 
+    @Override
     public void init() {
         registerBeanDefinitionParser("service", new NettyRpcServiceParser());
         registerBeanDefinitionParser("registry", new NettyRpcRegisteryParser());

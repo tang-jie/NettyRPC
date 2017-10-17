@@ -96,9 +96,9 @@ public class ReflectionUtils {
         final Constructor<?>[] declaredConstructors = superclass.getDeclaredConstructors();
         for (int i = 0; i < declaredConstructors.length; i++) {
             Constructor<?> constructor = declaredConstructors[i];
-            if (constructor.getParameterTypes().length == 0
-                    && (Modifier.isPublic(constructor.getModifiers()) || Modifier.isProtected(constructor
-                    .getModifiers()))) {
+            boolean exist = (constructor.getParameterTypes().length == 0 &&
+                    (Modifier.isPublic(constructor.getModifiers()) || Modifier.isProtected(constructor.getModifiers())));
+            if (exist) {
                 return true;
             }
         }

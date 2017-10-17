@@ -78,11 +78,11 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 ----------
 ## NettyRPC 2.5 Build 2017/10/13
 **在NettyRPC 2.4的基础上，基于JMX（Java Management Extensions）技术，对NettyRPC的服务端进行调用监控，加强服务端对调用请求的分析统计能力：**
-* 是否开启JMX监控，可以通过环境变量：nettyrpc-jmx-invoke-metrics来控制（为0表示关闭JMX监控；非0表示打开JMX监控）。对应NettyRPC系统变量为：RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS。如果开启JMX监控，启动的时候，控制台上会打印JMX URL信息。
+* 是否开启JMX监控，可以通过环境变量：nettyrpc.jmx.invoke.metrics来控制（为0表示关闭JMX监控；非0表示打开JMX监控）。对应NettyRPC系统变量为：RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS。如果开启JMX监控，启动的时候，控制台上会打印JMX URL信息。
 * JMX监控的URL地址格式为：service:jmx:rmi:///jndi/rmi://服务器ip地址:1098/NettyRPCServer。比如：service:jmx:rmi:///jndi/rmi://10.1.8.5:1098/NettyRPCServer，然后可以在jconsole中，通过JMX对NettyRPC服务端的调用情况进行监控。
 * 目前服务端监控的维度主要有：调用次数、调用成功次数、调用失败次数、过滤拦截次数、调用时长、调用最大时长、调用最小时长、错误明细、最后一次错误发生的时间、调用时长统计数组区间。
 * 目前暂时只支持jconsole方式，后续会考虑在NettyRPC内部架设HTTP服务器，以网页的形式直观地展示监控数据信息。
-* 为了提高JMX数据统计监控的精度，服务端采用了临界区对RPC请求进行隔离，这种技术本身对服务端的性能不会有太大影响。但是如果客户端是通过AsyncInvoker异步调用的方式进行RPC请求的话，则会把异步并行加载强制转成异步串行加载。这并不是我们希望看到的。所以可以做一下权衡：如果系统存在大量异步并行加载的调用请求，建议把JMX监控关闭（设置nettyrpc-jmx-invoke-metrics环境变量为0）。
+* 为了提高JMX数据统计监控的精度，服务端采用了临界区对RPC请求进行隔离，这种技术本身对服务端的性能不会有太大影响。但是如果客户端是通过AsyncInvoker异步调用的方式进行RPC请求的话，则会把异步并行加载强制转成异步串行加载。这并不是我们希望看到的。所以可以做一下权衡：如果系统存在大量异步并行加载的调用请求，建议把JMX监控关闭（设置nettyrpc.jmx.invoke.metrics环境变量为0）。
 * 后续会针对异步并行加载串行化的问题，在服务端采用哈希队列的方式隔离管理临界区对象，减少JMX监控对异步调用的侵蚀影响。
 
 ----------

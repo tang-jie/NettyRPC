@@ -34,6 +34,7 @@ import java.util.Map;
  * @since 2016/10/7
  */
 public class JdkNativeRecvHandler implements NettyRpcRecvHandler {
+    @Override
     public void handle(Map<String, Object> handlerMap, ChannelPipeline pipeline) {
         pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, MessageCodecUtil.MESSAGE_LENGTH, 0, MessageCodecUtil.MESSAGE_LENGTH));
         pipeline.addLast(new LengthFieldPrepender(MessageCodecUtil.MESSAGE_LENGTH));

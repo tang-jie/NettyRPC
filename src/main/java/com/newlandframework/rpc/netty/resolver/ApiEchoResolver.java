@@ -46,6 +46,7 @@ public class ApiEchoResolver implements Callable<Boolean> {
         this.port = port;
     }
 
+    @Override
     public Boolean call() {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();

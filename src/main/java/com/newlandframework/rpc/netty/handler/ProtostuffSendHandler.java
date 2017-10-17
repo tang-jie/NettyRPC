@@ -29,6 +29,7 @@ import io.netty.channel.ChannelPipeline;
  * @since 2016/10/7
  */
 public class ProtostuffSendHandler implements NettyRpcSendHandler {
+    @Override
     public void handle(ChannelPipeline pipeline) {
         ProtostuffCodecUtil util = new ProtostuffCodecUtil();
         util.setRpcDirect(false);

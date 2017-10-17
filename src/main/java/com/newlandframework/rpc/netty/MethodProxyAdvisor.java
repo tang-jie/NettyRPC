@@ -53,7 +53,9 @@ public class MethodProxyAdvisor implements MethodInterceptor {
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Object[] params = invocation.getArguments();
-        if (params.length <= 0) return null;
+        if (params.length <= 0) {
+            return null;
+        }
 
         MessageRequest request = (MessageRequest) params[0];
 

@@ -44,6 +44,7 @@ public class CostTime implements Serializable {
         this.detail = detail;
     }
 
+    @Override
     public String toString() {
         return "CostTime [elapse=" + elapse + ", detail=" + detail + "]";
     }

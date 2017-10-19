@@ -83,7 +83,7 @@ public class MessageRecvExecutor implements ApplicationContextAware {
     EventLoopGroup boss = new NioEventLoopGroup();
     EventLoopGroup worker = new NioEventLoopGroup(PARALLEL, threadRpcFactory, SelectorProvider.provider());
 
-    public MessageRecvExecutor() {
+    private MessageRecvExecutor() {
         handlerMap.clear();
         register();
     }

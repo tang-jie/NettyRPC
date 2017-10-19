@@ -36,7 +36,7 @@ public class MessageSendExecutor {
 
     private RpcServerLoader loader = RpcServerLoader.getInstance();
 
-    public MessageSendExecutor() {
+    private MessageSendExecutor() {
 
     }
 

@@ -47,6 +47,16 @@ public class PersonManageImpl implements PersonManage {
     }
 
     @Override
+    public void query(long timeout) {
+        //your business logic code here!
+        try {
+            TimeUnit.SECONDS.sleep(timeout);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void check() {
         throw new RuntimeException("person check fail!");
     }

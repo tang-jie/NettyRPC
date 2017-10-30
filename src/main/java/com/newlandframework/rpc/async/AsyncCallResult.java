@@ -16,7 +16,9 @@
 package com.newlandframework.rpc.async;
 
 import com.newlandframework.rpc.core.ReflectionUtils;
+import com.newlandframework.rpc.core.RpcSystemConfig;
 import com.newlandframework.rpc.exception.AsyncCallException;
+import com.newlandframework.rpc.exception.InvokeTimeoutException;
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 
@@ -55,7 +57,15 @@ public class AsyncCallResult {
         } catch (InterruptedException e) {
             throw new AsyncCallException(e);
         } catch (Exception e) {
+            translateTimeoutException(e);
             throw new AsyncCallException(e);
+        }
+    }
+
+    private void translateTimeoutException(Throwable t) {
+        int index = t.getMessage().indexOf(RpcSystemConfig.TIMEOUT_RESPONSE_MSG);
+        if (index != -1) {
+            throw new InvokeTimeoutException(t);
         }
     }
 

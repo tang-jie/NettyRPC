@@ -41,7 +41,7 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
     protected boolean returnNotNull = true;
     protected long invokeTimespan;
 
-    AbstractMessageRecvInitializeTask(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
+    public AbstractMessageRecvInitializeTask(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
         this.request = request;
         this.response = response;
         this.handlerMap = handlerMap;

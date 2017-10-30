@@ -21,6 +21,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.newlandframework.rpc.exception.InvokeModuleException;
+import com.newlandframework.rpc.exception.InvokeTimeoutException;
 import com.newlandframework.rpc.exception.RejectResponeException;
 import com.newlandframework.rpc.model.MessageRequest;
 import com.newlandframework.rpc.model.MessageResponse;
@@ -43,10 +44,10 @@ public class MessageCallBack {
         this.request = request;
     }
 
-    public Object start() throws InterruptedException, RejectResponeException {
+    public Object start() {
         try {
             lock.lock();
-            finish.await(RpcSystemConfig.SYSTEM_PROPERTY_MESSAGE_CALLBACK_TIMEOUT, TimeUnit.MILLISECONDS);
+            await();
             if (this.response != null) {
                 boolean isInvokeSucc = getInvokeResult();
                 if (isInvokeSucc) {
@@ -73,6 +74,18 @@ public class MessageCallBack {
             this.response = reponse;
         } finally {
             lock.unlock();
+        }
+    }
+
+    private void await() {
+        boolean timeout = false;
+        try {
+            timeout = finish.await(RpcSystemConfig.SYSTEM_PROPERTY_MESSAGE_CALLBACK_TIMEOUT, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (!timeout) {
+            throw new InvokeTimeoutException(RpcSystemConfig.TIMEOUT_RESPONSE_MSG);
         }
     }
 

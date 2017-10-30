@@ -13,20 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.newlandframework.rpc.services;
-
-import com.newlandframework.rpc.services.pojo.CostTime;
+package com.newlandframework.rpc.exception;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:CostTimeCalculate.java
- * @description:CostTimeCalculate功能模块
+ * @filename:InvokeTimeoutException.java
+ * @description:InvokeTimeoutException功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2017/3/22
+ * @since 2017/10/28
  */
-public interface CostTimeCalculate {
-    CostTime calculate();
+public class InvokeTimeoutException extends RuntimeException {
+    public InvokeTimeoutException() {
+        super();
+    }
 
-    CostTime busy();
+    public InvokeTimeoutException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public InvokeTimeoutException(String message) {
+        super(message);
+    }
+
+    public InvokeTimeoutException(Throwable cause) {
+        super(cause);
+    }
 }
 

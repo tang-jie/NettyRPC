@@ -15,7 +15,7 @@
  */
 package com.newlandframework.rpc.jmx;
 
-import com.newlandframework.rpc.parallel.SemaphoreWrapper;
+import com.newlandframework.rpc.core.RpcSystemConfig;
 
 import javax.management.*;
 import java.lang.management.ManagementFactory;
@@ -23,9 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
 
@@ -37,16 +35,14 @@ import java.util.concurrent.locks.LockSupport;
  * @since 2017/10/13
  */
 public abstract class AbstractModuleMetricsHandler extends NotificationBroadcasterSupport implements ModuleMetricsVisitorMXBean {
-    public final static String MBEAN_NAME = "com.newlandframework.rpc:type=ModuleMetricsHandler";
-    public final static int MODULE_METRICS_JMX_PORT = 1098;
-    protected String moduleMetricsJmxUrl = "";
-    protected Semaphore semaphore = new Semaphore(0);
-    protected SemaphoreWrapper semaphoreWrapper = new SemaphoreWrapper(semaphore);
     protected List<ModuleMetricsVisitor> visitorList = new CopyOnWriteArrayList<ModuleMetricsVisitor>();
     protected static String startTime;
-    protected ModuleMetricsListener listener = new ModuleMetricsListener();
     private final AtomicBoolean locked = new AtomicBoolean(false);
     private final Queue<Thread> waiters = new ConcurrentLinkedQueue<Thread>();
+    private static final int METRICS_VISITOR_LIST_SIZE = HashModuleMetricsVisitor.getInstance().getHashModuleMetricsVisitorListSize();
+    private MetricsTask[] tasks = new MetricsTask[METRICS_VISITOR_LIST_SIZE];
+    private boolean aggregationTaskFlag = false;
+    private ExecutorService executor = Executors.newFixedThreadPool(METRICS_VISITOR_LIST_SIZE);
 
     public AbstractModuleMetricsHandler() {
 
@@ -63,6 +59,22 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
 
     @Override
     public List<ModuleMetricsVisitor> getModuleMetricsVisitor() {
+        if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_SUPPORT) {
+            CountDownLatch latch = new CountDownLatch(1);
+            MetricsAggregationTask aggregationTask = new MetricsAggregationTask(aggregationTaskFlag, tasks, visitorList, latch);
+            CyclicBarrier barrier = new CyclicBarrier(METRICS_VISITOR_LIST_SIZE, aggregationTask);
+            for (int i = 0; i < METRICS_VISITOR_LIST_SIZE; i++) {
+                tasks[i] = new MetricsTask(barrier, HashModuleMetricsVisitor.getInstance().getHashVisitorList().get(i));
+                executor.execute(tasks[i]);
+            }
+
+            try {
+                visitorList.clear();
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return visitorList;
     }
 
@@ -100,6 +112,7 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
         }
 
         waiters.remove();
+
     }
 
     protected void exit() {
@@ -108,5 +121,13 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
     }
 
     protected abstract ModuleMetricsVisitor visitCriticalSection(String moduleName, String methodName);
+
+    public ExecutorService getExecutor() {
+        return executor;
+    }
+
+    public void setExecutor(ExecutorService executor) {
+        this.executor = executor;
+    }
 }
 

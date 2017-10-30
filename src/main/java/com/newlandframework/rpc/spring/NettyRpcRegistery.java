@@ -16,6 +16,7 @@
 package com.newlandframework.rpc.spring;
 
 import com.newlandframework.rpc.core.RpcSystemConfig;
+import com.newlandframework.rpc.jmx.HashModuleMetricsVisitor;
 import com.newlandframework.rpc.jmx.ModuleMetricsHandler;
 import com.newlandframework.rpc.jmx.ThreadPoolMonitorProvider;
 import com.newlandframework.rpc.serialize.RpcSerializeProtocol;
@@ -41,8 +42,9 @@ public class NettyRpcRegistery implements InitializingBean, DisposableBean {
     public void destroy() throws Exception {
         MessageRecvExecutor.getInstance().stop();
 
-        if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0) {
-            ModuleMetricsHandler.getInstance().stop();
+        if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT) {
+            ModuleMetricsHandler handler = ModuleMetricsHandler.getInstance();
+            handler.stop();
         }
     }
 
@@ -60,8 +62,11 @@ public class NettyRpcRegistery implements InitializingBean, DisposableBean {
 
         ref.start();
 
-        if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0) {
-            ModuleMetricsHandler.getInstance().start();
+        if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT) {
+            HashModuleMetricsVisitor visitor = HashModuleMetricsVisitor.getInstance();
+            visitor.signal();
+            ModuleMetricsHandler handler = ModuleMetricsHandler.getInstance();
+            handler.start();
         }
     }
 

@@ -37,6 +37,10 @@ public class SemaphoreWrapper {
         semaphore = new Semaphore(permits);
     }
 
+    public SemaphoreWrapper(int permits, boolean fair) {
+        semaphore = new Semaphore(permits, fair);
+    }
+
     public SemaphoreWrapper(Semaphore semaphore) {
         this.semaphore = semaphore;
     }

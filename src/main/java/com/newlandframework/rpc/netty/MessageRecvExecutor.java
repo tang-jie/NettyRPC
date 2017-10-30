@@ -166,7 +166,7 @@ public class MessageRecvExecutor implements ApplicationContextAware {
                             final ExecutorService executor = Executors.newFixedThreadPool(numberOfEchoThreadsPool);
                             ExecutorCompletionService<Boolean> completionService = new ExecutorCompletionService<Boolean>(executor);
                             completionService.submit(new ApiEchoResolver(host, echoApiPort));
-                            System.out.printf("[author tangjie] Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n", host, port, serializeProtocol, ModuleMetricsHandler.getStartTime(), (RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0 ? "open" : "close"));
+                            System.out.printf("[author tangjie] Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n", host, port, serializeProtocol, ModuleMetricsHandler.getStartTime(), (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT ? "open" : "close"));
                             channelFuture.channel().closeFuture().sync().addListener(new ChannelFutureListener() {
                                 @Override
                                 public void operationComplete(ChannelFuture future) throws Exception {

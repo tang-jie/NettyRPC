@@ -28,7 +28,9 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -303,6 +305,50 @@ public class ReflectionUtils {
             }
         }
         return method;
+    }
+
+    private String getClassType(Class<?>[] types) {
+        StringBuilder type = new StringBuilder();
+        for (int i = 0; i < types.length; i++) {
+            if (i > 0) {
+                type.append(", ");
+            }
+            type.append(getType(types[i]));
+        }
+        return type.toString();
+    }
+
+    public List<String> getClassMethodSignature(Class<?> cls) {
+        List<String> list = new ArrayList<String>();
+        if (cls.isInterface()) {
+            Method[] methods = cls.getDeclaredMethods();
+            StringBuilder signatureMethod = new StringBuilder();
+            for (Method member : methods) {
+                int modifiers = member.getModifiers();
+                if (Modifier.isAbstract(modifiers) && Modifier.isPublic(modifiers)) {
+                    signatureMethod.append(modifiers(Modifier.PUBLIC));
+                } else {
+                    signatureMethod.append(modifiers);
+                }
+
+                if (member instanceof Method) {
+                    signatureMethod.append(getType(((Method) member).getReturnType()) + " ");
+                }
+
+                signatureMethod.append(member.getName() + "(");
+                signatureMethod.append(getClassType(member.getParameterTypes()));
+                signatureMethod.append(")");
+                Class<?>[] exceptions = member.getExceptionTypes();
+                if (exceptions.length > 0) {
+                    signatureMethod.append(" throws ");
+                }
+                listTypes(exceptions);
+                signatureMethod.append(";");
+                list.add(signatureMethod.toString());
+                signatureMethod.delete(0, signatureMethod.length());
+            }
+        }
+        return list;
     }
 }
 

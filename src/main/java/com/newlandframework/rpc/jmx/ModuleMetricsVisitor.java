@@ -16,6 +16,7 @@
 package com.newlandframework.rpc.jmx;
 
 import com.alibaba.druid.util.Histogram;
+import com.newlandframework.rpc.core.RpcSystemConfig;
 
 import javax.management.JMException;
 import javax.management.openmbean.*;
@@ -37,6 +38,12 @@ import java.util.concurrent.atomic.AtomicLongFieldUpdater;
  * @since 2017/10/12
  */
 public class ModuleMetricsVisitor {
+    private static final long DEFAULT_INVOKE_MIN_TIMESPAN = 3600 * 1000L;
+    private static final String[] THROWABLE_NAMES = {"message", "class", "stackTrace"};
+    private static final String[] THROWABLE_DESCRIPTIONS = {"message", "class", "stackTrace"};
+    private static final OpenType<?>[] THROWABLE_TYPES = new OpenType<?>[]{SimpleType.STRING, SimpleType.STRING, SimpleType.STRING};
+    private static CompositeType THROWABLE_COMPOSITE_TYPE = null;
+
     private String moduleName;
     private String methodName;
     private volatile long invokeCount = 0L;
@@ -44,12 +51,13 @@ public class ModuleMetricsVisitor {
     private volatile long invokeFailCount = 0L;
     private volatile long invokeFilterCount = 0L;
     private long invokeTimespan = 0L;
-    private long invokeMinTimespan = 3600 * 1000L;
+    private long invokeMinTimespan = DEFAULT_INVOKE_MIN_TIMESPAN;
     private long invokeMaxTimespan = 0L;
-    private long invokeHistogram[];
+    private long[] invokeHistogram;
     private Exception lastStackTrace;
     private String lastStackTraceDetail;
     private long lastErrorTime;
+    private int hashKey = 0;
 
     private Histogram histogram = new Histogram(TimeUnit.MILLISECONDS, new long[]{1, 10, 100, 1000, 10 * 1000, 100 * 1000, 1000 * 1000});
 
@@ -58,23 +66,17 @@ public class ModuleMetricsVisitor {
     private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeFailCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeFailCount");
     private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeFilterCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeFilterCount");
 
-    private static final String[] THROWABLE_NAMES = {"message", "class", "stackTrace"};
-    private static final String[] THROWABLE_DESCRIPTIONS = {"message", "class", "stackTrace"};
-    private static final OpenType<?>[] THROWABLE_TYPES = new OpenType<?>[]{SimpleType.STRING, SimpleType.STRING, SimpleType.STRING};
-    private static CompositeType THROWABLE_COMPOSITE_TYPE = null;
-
     @ConstructorProperties({"moduleName", "methodName"})
     public ModuleMetricsVisitor(String moduleName, String methodName) {
         this.moduleName = moduleName;
         this.methodName = methodName;
+        clear();
     }
 
-    public void reset() {
-        moduleName = "";
-        methodName = "";
+    public void clear() {
         lastStackTraceDetail = "";
         invokeTimespan = 0L;
-        invokeMinTimespan = 0L;
+        invokeMinTimespan = DEFAULT_INVOKE_MIN_TIMESPAN;
         invokeMaxTimespan = 0L;
         lastErrorTime = 0L;
         lastStackTrace = null;
@@ -83,6 +85,20 @@ public class ModuleMetricsVisitor {
         invokeFailCountUpdater.set(this, 0);
         invokeFilterCountUpdater.set(this, 0);
         histogram.reset();
+    }
+
+    public void reset() {
+        moduleName = "";
+        methodName = "";
+        clear();
+    }
+
+    public void setErrorLastTimeLongVal(long lastErrorTime) {
+        this.lastErrorTime = lastErrorTime;
+    }
+
+    public long getErrorLastTimeLongVal() {
+        return lastErrorTime;
     }
 
     public String getErrorLastTime() {
@@ -114,6 +130,10 @@ public class ModuleMetricsVisitor {
         this.lastStackTrace = lastStackTrace;
         this.lastStackTraceDetail = getLastStackTrace();
         this.lastErrorTime = System.currentTimeMillis();
+    }
+
+    public void setLastStackTraceDetail(String lastStackTraceDetail) {
+        this.lastStackTraceDetail = lastStackTraceDetail;
     }
 
     public String getLastStackTraceDetail() {
@@ -210,12 +230,20 @@ public class ModuleMetricsVisitor {
         return this.invokeFilterCountUpdater.incrementAndGet(this);
     }
 
+    public void setHistogram(Histogram histogram) {
+        this.histogram = histogram;
+    }
+
     public Histogram getHistogram() {
         return histogram;
     }
 
     public long[] getInvokeHistogram() {
-        return histogram.toArray();
+        return RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_SUPPORT ? invokeHistogram : histogram.toArray();
+    }
+
+    public void setInvokeHistogram(long[] invokeHistogram) {
+        this.invokeHistogram = invokeHistogram;
     }
 
     public long getInvokeTimespan() {
@@ -240,6 +268,34 @@ public class ModuleMetricsVisitor {
 
     public void setInvokeMaxTimespan(long invokeMaxTimespan) {
         this.invokeMaxTimespan = invokeMaxTimespan;
+    }
+
+    public int getHashKey() {
+        return hashKey;
+    }
+
+    public void setHashKey(int hashKey) {
+        this.hashKey = hashKey;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((moduleName == null) ? 0 : moduleName.hashCode());
+        result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return moduleName.equals(((ModuleMetricsVisitor) obj).moduleName) && methodName.equals(((ModuleMetricsVisitor) obj).methodName);
+    }
+
+    @Override
+    public String toString() {
+        String metrics = String.format("<<[moduleName:%s]-[methodName:%s]>> [invokeCount:%d][invokeSuccCount:%d][invokeFilterCount:%d][invokeTimespan:%d][invokeMinTimespan:%d][invokeMaxTimespan:%d][invokeFailCount:%d][lastErrorTime:%d][lastStackTraceDetail:%s]\n", moduleName, methodName, invokeCount, invokeSuccCount, invokeFilterCount, invokeTimespan, invokeMinTimespan, invokeMaxTimespan, invokeFailCount, lastErrorTime, lastStackTraceDetail);
+        return metrics;
     }
 }
 

@@ -17,6 +17,7 @@ package com.newlandframework.rpc.jmx;
 
 import com.newlandframework.rpc.netty.MessageRecvExecutor;
 import com.newlandframework.rpc.parallel.AbstractDaemonThread;
+import com.newlandframework.rpc.parallel.SemaphoreWrapper;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +30,9 @@ import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Semaphore;
 
 import static com.newlandframework.rpc.core.RpcSystemConfig.DELIMITER;
 
@@ -40,8 +44,15 @@ import static com.newlandframework.rpc.core.RpcSystemConfig.DELIMITER;
  * @since 2017/10/12
  */
 public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
+    public final static String MBEAN_NAME = "com.newlandframework.rpc:type=ModuleMetricsHandler";
+    public final static int MODULE_METRICS_JMX_PORT = 1098;
+    private String moduleMetricsJmxUrl = "";
+    private Semaphore semaphore = new Semaphore(0);
+    private SemaphoreWrapper semaphoreWrapper = new SemaphoreWrapper(semaphore);
     private static final ModuleMetricsHandler INSTANCE = new ModuleMetricsHandler();
     private MBeanServerConnection connection;
+    private CountDownLatch latch = new CountDownLatch(1);
+    private ModuleMetricsListener listener = new ModuleMetricsListener();
 
     public static ModuleMetricsHandler getInstance() {
         return INSTANCE;
@@ -93,6 +104,7 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
             public void run() {
                 MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
                 try {
+                    latch.await();
                     LocateRegistry.createRegistry(MODULE_METRICS_JMX_PORT);
                     MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
                     String ipAddr = StringUtils.isNotEmpty(ref.getServerAddress()) ? StringUtils.substringBeforeLast(ref.getServerAddress(), DELIMITER) : "localhost";
@@ -123,6 +135,8 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
                     e.printStackTrace();
                 } catch (InstanceNotFoundException e) {
                     e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }.start();
@@ -133,6 +147,11 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
         try {
             ObjectName name = new ObjectName(MBEAN_NAME);
             mbs.unregisterMBean(name);
+            ExecutorService executor = getExecutor();
+            executor.shutdown();
+            while (!executor.isTerminated()) {
+
+            }
         } catch (MalformedObjectNameException e) {
             e.printStackTrace();
         } catch (InstanceNotFoundException e) {
@@ -161,6 +180,14 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
 
     public MBeanServerConnection getConnection() {
         return connection;
+    }
+
+    public CountDownLatch getLatch() {
+        return latch;
+    }
+
+    public void setLatch(CountDownLatch latch) {
+        this.latch = latch;
     }
 }
 

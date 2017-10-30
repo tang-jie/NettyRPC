@@ -28,7 +28,7 @@ import java.util.Map;
  * @since 2017/10/13
  */
 public class MessageRecvInitializeTaskAdapter extends AbstractMessageRecvInitializeTask {
-    MessageRecvInitializeTaskAdapter(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
+    public MessageRecvInitializeTaskAdapter(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
         super(request, response, handlerMap);
     }
 

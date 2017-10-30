@@ -40,8 +40,9 @@ public class MessageRecvInitializeTask extends AbstractMessageRecvInitializeTask
     private AtomicReference<ModuleMetricsVisitor> visitor = new AtomicReference<ModuleMetricsVisitor>();
     private AtomicReference<InvokeEventBusFacade> facade = new AtomicReference<InvokeEventBusFacade>();
     private AtomicReference<InvokeEventWatcher> watcher = new AtomicReference<InvokeEventWatcher>(new InvokeEventWatcher());
+    private SemaphoreWrapperFactory factory = SemaphoreWrapperFactory.getInstance();
 
-    MessageRecvInitializeTask(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
+    public MessageRecvInitializeTask(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
         super(request, response, handlerMap);
     }
 
@@ -88,11 +89,11 @@ public class MessageRecvInitializeTask extends AbstractMessageRecvInitializeTask
 
     @Override
     protected void acquire() {
-        SemaphoreWrapperFactory.getInstance().acquire();
+        factory.acquire();
     }
 
     @Override
     protected void release() {
-        SemaphoreWrapperFactory.getInstance().release();
+        factory.release();
     }
 }

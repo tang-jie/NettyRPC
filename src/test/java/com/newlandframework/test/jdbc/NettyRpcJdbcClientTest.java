@@ -42,7 +42,7 @@ public class NettyRpcJdbcClientTest {
             p.setId(1);
             p.setName("小好");
             p.setAge(2);
-            p.setBirthday(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2015-08-11 16:47:00"));
+            p.setBirthday(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2015-08-11 16:28:00"));
             int result = manage.save(p);
             manage.query(p);
             System.out.println("call pojo rpc result:" + result);

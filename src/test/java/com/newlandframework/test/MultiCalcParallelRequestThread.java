@@ -15,6 +15,7 @@
  */
 package com.newlandframework.test;
 
+import com.newlandframework.rpc.exception.InvokeTimeoutException;
 import com.newlandframework.rpc.services.MultiCalculate;
 
 import java.util.concurrent.CountDownLatch;
@@ -45,13 +46,14 @@ public class MultiCalcParallelRequestThread implements Runnable {
     public void run() {
         try {
             signal.await();
-
             int multi = calc.multi(taskNumber, taskNumber);
             System.out.println("calc multi result:[" + multi + "]");
-
-            finish.countDown();
         } catch (InterruptedException ex) {
             Logger.getLogger(MultiCalcParallelRequestThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvokeTimeoutException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            finish.countDown();
         }
     }
 }

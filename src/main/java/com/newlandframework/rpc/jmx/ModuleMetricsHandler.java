@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
@@ -60,6 +61,11 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
 
     private ModuleMetricsHandler() {
         super();
+    }
+
+    @Override
+    public List<ModuleMetricsVisitor> getModuleMetricsVisitor() {
+        return super.getModuleMetricsVisitor();
     }
 
     @Override

@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicLongFieldUpdater;
  * @since 2017/10/12
  */
 public class ModuleMetricsVisitor {
-    private static final long DEFAULT_INVOKE_MIN_TIMESPAN = 3600 * 1000L;
+    public static final long DEFAULT_INVOKE_MIN_TIMESPAN = 3600 * 1000L;
     private static final String[] THROWABLE_NAMES = {"message", "class", "stackTrace"};
     private static final String[] THROWABLE_DESCRIPTIONS = {"message", "class", "stackTrace"};
     private static final OpenType<?>[] THROWABLE_TYPES = new OpenType<?>[]{SimpleType.STRING, SimpleType.STRING, SimpleType.STRING};
@@ -101,7 +101,7 @@ public class ModuleMetricsVisitor {
         return lastErrorTime;
     }
 
-    public String getErrorLastTime() {
+    public String getLastErrorTime() {
         if (lastErrorTime <= 0) {
             return null;
         }

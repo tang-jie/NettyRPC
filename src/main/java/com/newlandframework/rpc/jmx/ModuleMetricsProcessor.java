@@ -97,8 +97,8 @@ public class ModuleMetricsProcessor {
         try {
             Object obj = connection.getAttribute(name, JMX_METRICS_ATTR);
             if (obj instanceof CompositeData[]) {
-                for (CompositeData data1 : (CompositeData[]) obj) {
-                    CompositeData data = (CompositeData) data1;
+                for (CompositeData compositeData : (CompositeData[]) obj) {
+                    CompositeData data = (CompositeData) compositeData;
                     String moduleName = (String) (data.get("moduleName"));
                     String methodName = (String) (data.get("methodName"));
                     long invokeCount = (Long) (data.get("invokeCount"));

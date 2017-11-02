@@ -96,6 +96,14 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 * 默认加锁采用非公平锁，你可以通过设置环境变量nettyrpc.jmx.metrics.lock.fair为1，改成公平锁。在高并发调用的场景，建议采用非公平锁。
 
 ----------
+## NettyRPC 2.7 Build 2017/11/2
+
+**在NettyRPC 2.6的基础上，新增内嵌HTTP服务器，用于展示NettyRPC模块调用监控指标。**
+* 利用JMX接口，从NettyRPC服务端获取模块调用的监控数据。
+* 在环境变量nettyrpc.jmx.invoke.metrics为1的前提下，在浏览器输入URL：http://ip地址:18886/NettyRPC.html/metrics。即可查看NettyRPC系统模块间的调用统计情况。
+* 可以按F5刷新统计界面，查看最新的统计指标。
+
+----------
 ## NettyRPC相关博客文章
 if you want to know more details,okey!you can see my blog:
 

@@ -275,14 +275,26 @@ public class ReflectionUtils {
         }
     }
 
-    public static Method getDeclaredMethod(final Class<?> cls, final String methodName, final Class<?>... parameterTypes) {
+    public static Method getDeclaredMethod(Class<?> cls, String methodName, Class<?>... parameterTypes) {
+        Method method = null;
+        Class<?> searchType = cls;
+        while (searchType != null) {
+            method = findDeclaredMethod(searchType, methodName, parameterTypes);
+            if (method != null) {
+                return method;
+            }
+            searchType = searchType.getSuperclass();
+        }
+        return method;
+    }
+
+    public static Method findDeclaredMethod(final Class<?> cls, final String methodName, final Class<?>... parameterTypes) {
         Method method = null;
         try {
             method = cls.getDeclaredMethod(methodName, parameterTypes);
             return method;
         } catch (NoSuchMethodException e) {
             if (method == null) {
-                breakFor:
                 for (Method m : cls.getDeclaredMethods()) {
                     if (m.getName().equals(methodName)) {
                         boolean find = true;
@@ -293,7 +305,7 @@ public class ReflectionUtils {
                         for (int i = 0; i < parameterTypes.length; i++) {
                             if (!paramType[i].isAssignableFrom(parameterTypes[i])) {
                                 find = false;
-                                break breakFor;
+                                break;
                             }
                         }
                         if (find) {

@@ -63,7 +63,6 @@ public class HashMessageRecvInitializeTask extends AbstractMessageRecvInitialize
             Method method = ReflectionUtils.getDeclaredMethod(cls, request.getMethodName(), request.getTypeParameters());
             utils.listMethod(method, false);
             String signatureMethod = utils.getProvider().toString().trim();
-
             int index = getHashVisitorListIndex(signatureMethod);
             List<ModuleMetricsVisitor> metricsVisitor = HashModuleMetricsVisitor.getInstance().getHashVisitorList().get(index);
             visitor.set(metricsVisitor.get(hashKey));

@@ -15,9 +15,13 @@
  */
 package com.newlandframework.rpc.netty;
 
+import com.newlandframework.rpc.core.Modular;
+import com.newlandframework.rpc.core.ModuleInvoker;
+import com.newlandframework.rpc.core.ModuleProvider;
 import com.newlandframework.rpc.core.RpcSystemConfig;
 import com.newlandframework.rpc.model.MessageRequest;
 import com.newlandframework.rpc.model.MessageResponse;
+import com.newlandframework.rpc.spring.BeanFactoryUtils;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.NameMatchMethodPointcutAdvisor;
 
@@ -40,6 +44,7 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
     protected static final String METHOD_MAPPED_NAME = "invoke";
     protected boolean returnNotNull = true;
     protected long invokeTimespan;
+    protected Modular modular = BeanFactoryUtils.getBean("modular");
 
     public AbstractMessageRecvInitializeTask(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
         this.request = request;
@@ -78,6 +83,31 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
         }
     }
 
+    private Object invoke(MethodInvoker mi, MessageRequest request) throws Throwable {
+        if (modular != null) {
+            ModuleProvider provider = modular.invoke(new ModuleInvoker() {
+
+                @Override
+                public Class getInterface() {
+                    return mi.getClass().getInterfaces()[0];
+                }
+
+                @Override
+                public Object invoke(MessageRequest request) throws Throwable {
+                    return mi.invoke(request);
+                }
+
+                @Override
+                public void destroy() {
+
+                }
+            }, request);
+            return provider.getInvoker().invoke(request);
+        } else {
+            return mi.invoke(request);
+        }
+    }
+
     private Object reflect(MessageRequest request) throws Throwable {
         ProxyFactory weaver = new ProxyFactory(new MethodInvoker());
         NameMatchMethodPointcutAdvisor advisor = new NameMatchMethodPointcutAdvisor();
@@ -85,7 +115,7 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
         advisor.setAdvice(new MethodProxyAdvisor(handlerMap));
         weaver.addAdvisor(advisor);
         MethodInvoker mi = (MethodInvoker) weaver.getProxy();
-        Object obj = mi.invoke(request);
+        Object obj = invoke(mi, request);
         invokeTimespan = mi.getInvokeTimespan();
         setReturnNotNull(((MethodProxyAdvisor) advisor.getAdvice()).isReturnNotNull());
         return obj;

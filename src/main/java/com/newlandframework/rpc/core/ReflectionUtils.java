@@ -234,7 +234,7 @@ public class ReflectionUtils {
     }
 
     public void listMethod(Executable member, boolean html) {
-        provider.append(html ? "<br>&nbsp&nbsp" : "\n  " + modifiers(member.getModifiers()));
+        provider.append(html ? "<br>&nbsp&nbsp" : "\n  " + modifiers(member.getModifiers() & (~Modifier.FINAL)));
         if (member instanceof Method) {
             provider.append(getType(((Method) member).getReturnType()) + " ");
         }
@@ -339,6 +339,9 @@ public class ReflectionUtils {
                 int modifiers = member.getModifiers();
                 if (Modifier.isAbstract(modifiers) && Modifier.isPublic(modifiers)) {
                     signatureMethod.append(modifiers(Modifier.PUBLIC));
+                    if (Modifier.isFinal(modifiers)) {
+                        signatureMethod.append(modifiers(Modifier.FINAL));
+                    }
                 } else {
                     signatureMethod.append(modifiers);
                 }

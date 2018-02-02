@@ -6,6 +6,8 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     http://www.newlandframework.com/nettyrpc http://www.newlandframework.com/nettyrpc/nettyrpc.xsd">
     <context:property-placeholder location="classpath:rpc-server.properties"/>
+    <bean id="beanFactory" class="com.newlandframework.rpc.spring.BeanFactoryUtils"/>
+
     <nettyrpc:service id="demoAddService" interfaceName="com.newlandframework.rpc.services.AddCalculate"
                       ref="calcAddService"></nettyrpc:service>
     <nettyrpc:service id="demoMultiService" interfaceName="com.newlandframework.rpc.services.MultiCalculate"
@@ -32,4 +34,30 @@
     <bean id="storeService" class="com.newlandframework.rpc.services.impl.StoreImpl"></bean>
 
     <bean id="simpleFilter" class="com.newlandframework.rpc.filter.support.SimpleFilter"></bean>
+
+    <!--NettyRPC Listeners And FilterChain Config by tangjie-->
+    <bean id="listeners" class="com.newlandframework.rpc.listener.ModuleListenerChainWrapper">
+        <constructor-arg name="modular">
+            <bean class="com.newlandframework.rpc.core.DefaultModular"></bean>
+        </constructor-arg>
+        <property name="listeners">
+            <list>
+                <ref bean="listenerAdapter"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="modular" class="com.newlandframework.rpc.filter.ModuleFilterChainWrapper">
+        <constructor-arg name="modular" ref="listeners"/>
+        <property name="filters">
+            <list>
+                <ref bean="classLoaderChainFilter"/>
+                <ref bean="echoChainFilter"/>
+            </list>
+        </property>
+    </bean>
+    <!--Listeners-->
+    <bean id="listenerAdapter" class="com.newlandframework.rpc.listener.support.ModuleListenerAdapter"/>
+    <!--FilterChain-->
+    <bean id="classLoaderChainFilter" class="com.newlandframework.rpc.filter.support.ClassLoaderChainFilter"/>
+    <bean id="echoChainFilter" class="com.newlandframework.rpc.filter.support.EchoChainFilter"/>
 </beans>

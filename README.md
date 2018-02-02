@@ -107,7 +107,7 @@ high performance java rpc server base on netty framework,using kryo,hessian,prot
 ## NettyRPC 2.8 Build 2018/2/2
 
 **在NettyRPC 2.7的基础上，加入RPC请求过滤器链和监听器链功能**
-* 通过监听器链和过滤器链，可以对RPC客户端请求进行过滤和监听。具体参考[NettyRPC入门手册](https://github.com/tang-jie/NettyRPC/wiki/NettyRPC%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97)中的“链式处理”章节。
+* 通过监听器链和过滤器链，可以对RPC客户端请求进行过滤和监听。具体参考[NettyRPC入门手册](https://github.com/tang-jie/NettyRPC/wiki/NettyRPC%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97)中的“RPC请求链式处理”章节。
 * 过滤器链封装类（com.newlandframework.rpc.filter.ModuleFilterChainWrapper）、监听器链封装类（com.newlandframework.rpc.listener.ModuleListenerChainWrapper）通过spring依赖注入。
 * NettyRPC内置了一些链式过滤器：com.newlandframework.rpc.filter.support.ClassLoaderChainFilter、com.newlandframework.rpc.filter.support.EchoChainFilter，以及链式监听器：com.newlandframework.rpc.listener.support.ModuleListenerAdapter。具体可以根据需求进行扩展添加。
 
